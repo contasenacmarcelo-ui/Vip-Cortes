@@ -1,0 +1,300 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Big Shoulders", sans-serif;
+}
+
+body {
+    background-color: #111;
+    color: white;
+    /* ESSENCIAL: Garante que o corpo da página não force scroll horizontal desnecessário (não quebra a página) */
+    overflow-x: hidden;
+}
+
+/* HEADER */
+header {
+    background-color: #000;
+    padding: 10px 20px;
+}
+
+.traco {
+    display: none;
+}
+
+/* --- LINKS DE NAVEGAÇÃO --- */
+.item {
+    background-color: transparent;
+    color: white;
+}
+
+.item2 {
+    color: #ffbd59;
+    text-decoration: none;
+    font-size: 35px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.tudo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Lado esquerdo (contém logo e nav principal) */
+.lado-esquerdo {
+    display: flex;
+    align-items: center;
+}
+
+.imagem img.log-vp {
+    height: 60px;
+    width: auto;
+}
+
+.margem-direita a,
+.margem-esquerda a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 35px;
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.item:hover,
+.item2:hover {
+    transform: scale(1.2);
+}
+
+/* Lado direito (contém Entrar e Cadastre-se) */
+.lado-direito {
+    display: flex;
+    align-items: center;
+}
+
+.margem-direita {
+    display: flex;
+}
+
+/* ------------------- */
+/* BLOCO ADMIN */
+.admin-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.title-admin {
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.line-branca-one,
+.line-branca-two {
+    flex: 1;
+    height: 3px;
+    background-color: white;
+    max-width: 300px;
+}
+
+.line-branca-tres {
+    width: 100%;
+    height: 3px;
+    background-color: #ffbd59;
+    margin-top: 15px;
+}
+
+/* ------------------- */
+/* TABELA */
+.tabela-container {
+    /* Largura de 35% em telas grandes, centralizada */
+    width: 35%;
+    margin: 40px auto 80px auto;
+    /* ESSENCIAL: Garante que o scroll lateral seja APENAS na tabela */
+    overflow-x: auto;
+}
+
+.agenda {
+    /* REMOÇÃO do min-width aqui */
+    width: 100%;
+    border-collapse: collapse;
+    background: #222;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.agenda th,
+.agenda td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    /* Impede a quebra de texto, permitindo o scroll horizontal no celular */
+    white-space: nowrap;
+}
+
+.agenda th {
+    background-color: #333;
+    font-weight: 700;
+}
+
+.agenda tr:nth-child(even) {
+    background-color: #1a1a1a;
+}
+
+/* Botão Excluir */
+.btn-excluir {
+    padding: 6px 12px;
+    border: none;
+    background-color: #ff4d4d;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-excluir:hover {
+    background-color: #cc0000;
+}
+
+
+/* ------------------- */
+/* RESPONSIVIDADE */
+
+@media (max-width: 950px) {
+    .admin-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .line-branca-one,
+    .line-branca-two {
+        display: none;
+    }
+
+    .title-admin {
+        font-size: 24px;
+    }
+
+    .margem-direita a,
+    .margem-esquerda a {
+        font-size: 14px;
+        margin: 0 6px;
+    }
+
+    .line-branca-tres {
+        margin-top: 10px;
+    }
+
+    .tabela-container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* **CORREÇÃO CRÍTICA**: A tabela precisa de um mínimo para não cortar. */
+    .agenda {
+        min-width: 600px;
+        /* Adicionado min-width APENAS na media query para garantir que ela não esprema */
+    }
+
+    .tabela-container {
+        width: 98%;
+        margin-top: 20px;
+    }
+
+    /* Diminui o tamanho da fonte e o padding na tabela para caber mais conteúdo */
+    .agenda th,
+    .agenda td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .btn-excluir {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    /* Esconde a navegação principal (Entrar e Cadastre-se) */
+    .margem-esquerda,
+    .lado-direito {
+        display: none;
+    }
+
+    /* Mostra o ícone de menu e centraliza a logo */
+    .traco {
+        display: block;
+    }
+
+    .lado-esquerdo {
+        justify-content: center;
+        flex-grow: 1;
+    }
+
+    .margem-direita {
+        display: none;
+    }
+
+    .tudo {
+        justify-content: space-between;
+    }
+
+    .imagem img.log-vp {
+        position: static;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .tabela-container {
+        width: 98%;
+        margin: 20px auto;
+    }
+
+    .agenda th,
+    .agenda td {
+        padding: 6px;
+        font-size: 12px;
+    }
+}
+
+/* AJUSTE ESPECÍFICO PARA TELA DE 450PX E MENORES */
+@media (max-width: 450px) {
+    .tabela-container {
+        display: flex;
+        flex-direction: column;
+        width: 370px;
+     
+    }
+
+    .td{
+        font-size: 5px;
+    }
+
+    .tr{
+        height: 1000px;
+    }
+    .agenda th,
+    .agenda td {
+        padding: 4px;
+        font-size: 10px;
+    }
+
+    .btn-excluir {
+        padding: 2px 5px;
+        font-size: 10px;
+    }
+
+    .title-admin {
+        font-size: 20px;
+    }
+}
