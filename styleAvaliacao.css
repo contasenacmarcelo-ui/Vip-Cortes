@@ -1,0 +1,458 @@
+/* --- ESTILOS GLOBAIS --- */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* --- ESTILOS DO CABEÇALHO --- */
+.container{
+    background-color: black;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 35px;
+    gap: 28px;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    align-items: center;
+    min-width: 320px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    /* LINHA BRANCA (solicitado anteriormente) */
+    border-bottom: 3px solid white;
+}
+ 
+.item, .entrar{
+    color: white;
+    font-size: 35px;
+    gap: 28px;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    align-items: center;
+}
+ 
+.entrar2{
+    color: #f0b65f;
+    font-size: 35px;
+    gap: 28px;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    align-items: center;
+}
+ 
+.logo{
+    height: 90px;
+    width: 150px;
+    align-items: center;
+}
+ 
+.container_left{
+    display: flex;
+    justify-content: space-between;
+    font-size: 35px;
+    gap: 28px;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    align-items: center;
+    padding: 0px 1%;
+}
+ 
+.container_right{
+    display: flex;
+    justify-content: space-between;
+    font-size: 35px;
+    gap: 28px;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    align-items: center;
+    padding: 0px 2%;
+}
+ 
+.item:hover,.entrar:hover,.entrar2:hover{
+    transform: scale(1.2);
+}
+        
+.menu-icon {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    display: none;
+    cursor: pointer;
+    padding: 0px 2%;
+}
+ 
+.menu-icon img{
+    height: 50px;
+    width: 50px;
+}
+ 
+@media (max-width: 1079px) {
+    .item,.entrar,.entrar2 {
+        display: none;
+    }
+    .menu-icon {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+}
+
+/* --- ESTILOS DA PÁGINA DE AVALIAÇÕES --- */
+.body-ava{
+    overflow: hidden;
+    background-color: black;
+}
+
+.barber_background-ava {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background: url("assets/fundo avaliações.png") no-repeat center/cover;
+}
+    
+.barber_background-ava::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8)30%, transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+    
+.avalic {
+    justify-content: center;
+    display:flex ;
+    font-weight: 1000;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 90px;
+    background-color: black;
+    height: 90px;
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 70px;
+    position: relative; 
+}
+
+/* LINHA LARANJA (#f0b65f) (solicitado anteriormente) */
+.avalic::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%; 
+    height: 3px;
+    background-color: #f0b65f;
+}
+    
+.avalienos{
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 50px;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    display: flex;
+    width: 10%;
+    margin-left: 89%;
+    background-color: #f0b65f;
+    justify-content: center;
+    border-radius: 25px;
+    margin-bottom: 10px;
+}
+.avalienos:hover{
+    background-color: #d19a46;
+}
+
+/* --- ESTILOS DAS AVALIAÇÕES INDIVIDUAIS (CORRIGIDO ALINHAMENTO) --- */
+
+.containerava {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+.coluns {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 15px; 
+}
+
+.pefilava{
+    /* Usa display flex para alinhar foto e nome */
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    /* Adiciona margem inferior para separar do .avali */
+    margin-bottom: 10px;
+    /* Removido margin-left: 0, pois a remoção da margem negativa no código original já corrigiu a posição */
+}
+.perfilava-foto{
+    width: 80px; 
+    height: 80px;
+    /* Espaço entre a foto e o nome */
+    margin-right: 15px; 
+}
+
+.nome{
+    color: white;
+    font-size: 30px;
+    /* Garante que o nome não empurre a caixa de avaliação para a próxima linha */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Removido width e padding-left para melhor fluxo */
+}
+
+.avali{
+    color: white;
+    background-color: #f0b65f;
+    width: 270px;
+    /* Altura automática para o texto se adaptar */
+    height: auto; 
+    min-height: 150px; /* Garante a altura mínima */
+    border-radius: 30px;
+    padding: 15px; 
+    font-size: 20px;
+    margin-top: 0; 
+    /* CORREÇÃO DO ALINHAMENTO: Usa uma margem negativa para alinhar a caixa do texto com a foto e o nome */
+    margin-left: -95px; /* Ajuste este valor (negativo) até que a caixa se alinhe perfeitamente com a foto. */
+    position: relative;
+}
+
+/* --- MEDIA QUERIES (Mantidos) --- */
+
+.coluns2{
+    display: none;
+}
+.coluns3{
+    display: none;
+}
+.title{
+    justify-content: center;
+    display:flex ;
+    font-weight: 1000;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 80px; 
+    background-color: black;
+    height: 50px;
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 50px;
+    border: 5px white;
+}
+@media ( max-width: 500px){
+    .body-ava{
+        overflow: visible;
+    }
+    .barber_background-ava{
+        display:none;
+    }
+    .avalienos{
+        margin-left: 26%;
+        width: 200px;
+    }
+    .coluns2{
+        display: flex;
+        flex-direction: column;
+        margin-left: 25%;
+    }
+    .coluns3{
+        display: none;
+    }
+    .star{
+        padding-right: 20px;
+    }
+}
+@media  (min-width:501px) and (max-width: 800px){
+    .barber_background-ava{
+        display:none;
+    }
+    .body-ava{
+        overflow: visible;
+    }
+    .avalienos{
+        margin-left: 40%;
+    }
+    .coluns2{
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 35%;
+        width: 270px;
+    }
+    .avalienos{
+        margin-left: 37%;
+        width: 200px;
+    }
+    .coluns3{
+        display: flex;
+        flex-direction: column;
+        margin-left: 35%;
+        width: 270px;
+    }
+}
+
+/* --- ESTILOS DA PÁGINA DE AVALIAÇÃO (AVALIENOS.HTML) --- */
+.body-ava2{
+    background-color: black;
+}
+.textavaliar{
+    justify-content: center;
+    display:flex ;
+    font-weight: 1000;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 70px; 
+    background-color: black;
+    height: 90px;
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 50px;
+    border: 5px white;
+}
+.avaliartext{
+    color: #f0b65f;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 50px;
+}
+
+.star {
+    color: gold;
+    opacity: 0.2; 
+    transition: opacity 0.3s, transform 0.2s;
+}
+.star {
+    font-size: 50px;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+    user-select: none;
+}
+.star.active {
+    opacity: 1;
+    color: gold;
+}
+
+.star:hover {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+.digiteaqui{
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 400px;
+    font-family: "Big Shoulders", sans-serif;
+    border: 2px solid white;
+    resize: none;
+    font-size: 25px;
+    margin-left: 39%;
+    margin-top: 5%;
+    border-radius: 10px;
+    color: white;
+    padding: 10px; 
+}
+.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 250px;
+    margin-top: 150px;
+}
+.enviar{
+    color: white;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 30px;
+    background-color: #f0b65f;
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 40px; 
+}
+.enviar:hover{
+    background-color: #b98c49;
+}
+.cancelar{
+    color: white;
+    text-decoration: none;
+    font-family: "Big Shoulders", sans-serif;
+    font-size: 30px;
+    background-color: #f0b65f;
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 40px; 
+}
+.cancelar:hover{
+    background-color: #b98c49;
+}
+@media ( max-width:768px) and (min-width:501px) {
+    .body-ava{
+        overflow: visible;
+    }
+    .digiteaqui{
+        margin-left: 24%;
+        height: 300px;
+        padding-left: 10px;
+    }
+    .button{
+        margin-top: 100px;
+    }
+    .enviar{
+        width: 200px;
+        height: 80px;
+        font-size: 60px;
+        padding-top: 5px;
+        border-radius: 30px;
+        justify-content: center;
+        line-height: 70px;
+    }
+    .cancelar{
+        width: 200px;
+        height: 80px;
+        font-size: 60px;
+        padding-top: 5px;
+        border-radius: 30px;
+        justify-content: center;
+        line-height: 70px;
+    }
+}
+@media ( max-width: 500px){
+    .body-ava{
+        overflow: visible;
+    }
+
+    .textavaliar{
+        font-size: 35px;
+        height: 50px;
+    }
+    .star{
+        font-size:30px;
+    }
+    .digiteaqui{
+        margin-left: 10%;
+        width: 350px;
+    }
+    .button{
+        gap: 50px;
+        margin-top: 40px;
+    }
+}
