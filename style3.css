@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 .container {
@@ -112,6 +111,7 @@
     align-items: center;
     display: flex;
   }
+
 }
 
 .main1 {
@@ -154,8 +154,6 @@
   margin-top: 50px;
   color: rgb(255, 255, 255);
   text-shadow: 3px 3px 4px rgba(0,0,0,0.5);
-  -webkit-text-stroke: 1px black;
-  -webkit-text-fill-color: white;
 }
 
 .form label {
@@ -486,3 +484,123 @@ input::placeholder {
   }
   }
  
+/* ============================= */
+/*        MENU LATERAL           */
+/* ============================= */
+
+.backdrop-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 9;
+}
+
+.backdrop-menu.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -270px; /* começa escondido */
+  width: 260px;
+  height: 100vh;
+  background: #111;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s ease;
+  z-index: 10;
+}
+
+.side-menu.open {
+  left: 0;
+}
+
+/* Cabeçalho do menu */
+.top-menu-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-menu-row h3 {
+  font-family: "Big Shoulders";
+  font-size: 32px;
+  margin: 0;
+}
+
+.close-x {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+/* Links */
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  gap: 18px;
+}
+
+.menu-items a {
+  font-family: "Big Shoulders";
+  font-size: 28px;
+  color: white;
+  text-decoration: none;
+}
+
+.menu-items a:hover {
+  color: #f0b65f;
+  transform: translateX(8px);
+  transition: 0.2s;
+}
+
+/* Área do perfil */
+.profile-box {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-box img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%; /* FOTO REDONDA */
+  border: 2px solid #f0b65f;
+  object-fit: cover;
+}
+
+.menu-icon {
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  z-index: 20;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; /* mobile-only */
+}
+
+/* Mostrar o botão apenas no mobile */
+@media (max-width: 1079px) {
+  #btnHamb {
+    display: flex !important;
+  }
+
+  .logo {
+    height: 90px;
+    width: 120px;
+    align-items: center;
+    justify-content: center;
+  }
+
+}

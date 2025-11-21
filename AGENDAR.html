@@ -27,9 +27,7 @@
 
   <body class="body">
     <header class="container">
-      <button class="menu-icon" aria-label="Abrir menu">
-        <img src="./assets/menu (sidebar).png" alt="" />
-      </button>
+    
       <section class="container_left">
         <img
           src="./assets/Vip cortes logo.png"
@@ -44,7 +42,37 @@
         <a href="cartaofidelidade.html" class="entrar"><b>Entrar</b></a>
         <a href="criandoconta.html" class="entrar2"><b>Cadastre-se</b></a>
       </section>
+
+      <!-- Botão Hamburguer -->
+<button id="btnHamb" class="menu-icon" aria-label="Abrir menu">
+  <img src="./assets/menu (sidebar).png" alt="">
+</button>
     </header>
+
+    
+
+<!-- Backdrop (para fechar ao clicar fora) -->
+<div id="backdrop" class="backdrop-menu"></div>
+
+<!-- Menu Lateral -->
+<aside id="sideMenu" class="side-menu">
+
+  <div class="top-menu-row">
+      <h3>Menu</h3>
+      <button class="close-x" id="btnClose">×</button>
+  </div>
+
+  <nav class="menu-items">
+      <a href="index.html">Home</a>
+      <a href="AGENDAR.html">Agendar</a>
+      <a href="Avaliações.html">Avaliar</a>
+  </nav>
+
+  <div class="profile-box">
+      <img src="./assets/perfilpadrao.png" alt="Foto de perfil">
+  </div>
+
+</aside>
 
     <main class="main1">
       <section class="form">
@@ -106,6 +134,27 @@
         </form>
       </section>
     </main>
+
+    <script>
+      const btn = document.getElementById("btnHamb");
+      const side = document.getElementById("sideMenu");
+      const closeBtn = document.getElementById("btnClose");
+      const backdrop = document.getElementById("backdrop");
+    
+      function abrirMenu() {
+        side.classList.add("open");
+        backdrop.classList.add("show");
+      }
+    
+      function fecharMenu() {
+        side.classList.remove("open");
+        backdrop.classList.remove("show");
+      }
+    
+      btn.addEventListener("click", abrirMenu);
+      closeBtn.addEventListener("click", fecharMenu);
+      backdrop.addEventListener("click", fecharMenu);
+    </script>
 
     <script src="main.js"></script>
     
