@@ -14,21 +14,22 @@
 
 <body>
     <header>
-
+        <div class="traco1">
+            <img class="tracos" src="./assets/menu (sidebar).png" alt="3 traços">
+        </div>
         <div class="caixa-one">
             <img class="img-one" src="./assets/Vip cortes logo.png" alt="logo">
-            <a class="item" href="index.html"><b>Home</b></a>
-            <a class="item" href="Avaliações.html"><b>Avaliações</b></a>
-            <a class="item" href="AGENDAR.html"><b>Agendar</b></a>
+            <a class="item" href="./index.html"><b>Home</b></a>
+            <a class="item" href="./Avaliações.html"><b>Avaliações</b></a>
+            <a class="item" href="./AGENDAR.html"><b>Agendar</b></a>
 
         </div>
 
         <div class="caixa-two">
-        <a class="item-two" href="cartaofidelidade.html"><b>Entrar</b></a>
-        <a class="item-three" href="criandoconta.html" class="active"><b>Cadastrar-se</b></a>
+            <a class="item-two" href="./indexfidelidade.html"><b>Entrar</b></a>
+            <a class="item-three" href="./indexconta.html"><b>Cadastre-se</b></a>
 
         </div>
-
     </header>
     <div class="line"></div>
     <section>
@@ -39,19 +40,32 @@
     <main>
         <img src="./assets/tela 2.png" alt="tela" class="tela">
         <div class="caixa-none">
-        <span class="fidelidade">Criando Conta</SPan>
+            <span class="fidelidade">Criando Conta</SPan>
         </div>
         <div class="caixa-ten">
-            <input type="text" placeholder="Nome:" class="botao">
-            <input type="text" placeholder="Telefone:" class="botao2">
-            <input type="text" placeholder="Data de Nascimento:" class="botao3">
-            <input type="text" placeholder="Crie uma senha:" class="botao4">
-        </div>
-        <div class="caixa-vinte">
-        <a href="#"><button class="botao5">Enviar e Entrar</button></a>
-    </div>
 
-    <script src="main.js" defer></script>
+            <form class="formulario" id="formulario">
+
+                <input id="Nome" type="text" placeholder="Nome:" class="botao">
+
+                <input id="Telefone" type="text" placeholder="Telefone:" class="botao2">
+
+                <input id="Data" type="text" placeholder="Data de Nascimento:" class="botao3">
+
+                <input id="Senha" type="text" placeholder="Crie uma senha:" class="botao4">
+
+                <div class="caixa-vinte">
+
+                    <button type="submit" class="botao5">Enviar e Entrar</button>
+
+                </div>
+            </form>
+
+        </div>
+
+
+        <script src="scriptconta.js"></script>
 </body>
 
 </html>
+

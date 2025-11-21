@@ -1,3 +1,5 @@
+
+
 * {
     margin: 0px;
     padding: 0px;
@@ -79,6 +81,11 @@ header {
 .item-three:hover {
     transform: scale(1.2);
     /*hover significa passar o mouse e fazer alguma função, tranform: scale e para a letra sobrepor */
+}
+
+.traco1 {
+    display: none;
+
 }
 
 .line {
@@ -188,7 +195,8 @@ section {
     font-family: "Big Shoulders", sans-serif;
 }
 
-.moeda {width: 150px;
+.moeda {
+    width: 150px;
     height: auto;
 }
 
@@ -250,10 +258,12 @@ section {
     color: white;
     text-decoration: none;
 }
-.botao8:hover{
+
+.botao8:hover {
     color: red;
 }
-.caixa-oito{
+
+.caixa-oito {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -262,4 +272,95 @@ section {
     color: white;
     font-size: 20px;
     font-family: "Big Shoulders", sans-serif;
+}
+
+@media screen and (max-width: 841px) {
+
+    /*cabeçalho*/
+    header {
+        height: 80px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-right: 40%;
+
+    }
+
+    .item,
+    .caixa-two {
+        display: none;
+    }
+
+    .traco1 {
+        display: flex;
+        height: 70px;
+        padding-right: 50%;
+    }
+
+    .aviso {
+        font-size: 20px;
+        padding: 1% 0 0 2%;
+    }
+}
+
+@media screen and (max-width: 555px) {
+
+    /*cabeçalho*/
+    header {
+        padding-right: 30%;
+    }
+
+    .item,
+    .caixa-two {
+        display: none;
+    }
+
+    .traco1 {
+        height: 50px;
+        padding-right: 30%;
+    }
+
+    .aviso {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 393px) {
+
+    /*cabeçalho*/
+    header {
+        height: 60px;
+        padding-right: 20%;
+    }
+
+    .item,
+    .caixa-two {
+        display: none;
+    }
+
+    .traco1 {
+        padding-right: 20%;
+    }
+
+    /*seçao*/
+    .item-four,
+    .item-five {
+        font-size: 50px;
+    }
+
+    /*div*/
+    .caixa,
+    .caixa-2,
+    .caixa-three,
+    .caixa-four,
+    .caixa-five,
+    .caixa-six,
+    .caixa-seven,
+    .caixa-oito {
+        font-size: 20px;
+    }
+
+    .caixa-oito {
+        height: -10px;
+    }
 }
