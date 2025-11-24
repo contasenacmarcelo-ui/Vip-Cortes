@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS fidelidades (
 );
 `);
 
+
 // ----------- Rotas API -----------
 
 // Signup
@@ -96,6 +97,8 @@ app.post('/api/signup', async (req, res) => {
     res.status(400).json({ error: 'Erro ao criar usuário. Email pode já estar cadastrado.' });
   }
 });
+
+
 
 // Login
 app.post('/api/login', async (req, res) => {
