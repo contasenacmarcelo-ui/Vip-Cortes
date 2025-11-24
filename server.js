@@ -2,10 +2,9 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import mysql from 'mysql2/promise';
+import { sequelize, Usuario, Agendamento, Review, Fidelidade } from './models/index.js';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
-import path from 'path';
 
 const app = express();
 const PORT = 10000;
@@ -17,108 +16,49 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());
-
 const _dirname = path.resolve();
 
-app.use(express.static(path.join(_dirname, "HTML")));
+// Servir arquivos estáticos diretamente da raiz do projeto
+app.use(express.static(_dirname));
 
-// ----------- Conexão MySQL -----------
-let db;
+// Rota amigável: /Pagina -> serve Pagina.html (ignora rotas que comecem com /api)
+app.get('/:page', async (req, res, next) => {
+  const page = req.params.page;
+  if (!page || page.startsWith('api')) return next();
+  const filePath = path.join(_dirname, `${page}.html`);
+  try {
+    await fs.access(filePath);
+    return res.sendFile(filePath);
+  } catch {
+    return next();
+  }
+});
+
+// ----------- Conexão via Sequelize (MySQL) com fallback para JSON local -----------
+let db = null;
 const DATA_DIR = path.resolve('.', 'data');
 const REVIEWS_FILE = path.join(DATA_DIR, 'reviews.json');
 const AGENDAMENTOS_FILE = path.join(DATA_DIR, 'agendamentos.json');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
 try {
-  db = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'vipcortes'
-  });
-  console.log('Conectado ao banco de dados MySQL!');
+  await sequelize.authenticate();
+  await sequelize.sync();
+  db = sequelize;
+  console.log('Conectado ao banco via Sequelize!');
 } catch (err) {
-  console.error('Erro ao conectar ao banco de dados MySQL:', err.message);
+  console.error('Erro ao conectar via Sequelize:', err.message);
   console.log('Usando fallback para armazenamento local (JSON).');
   db = null;
   // garante que diretório e arquivo existam
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
-    try {
-      await fs.access(REVIEWS_FILE);
-    } catch {
-      await fs.writeFile(REVIEWS_FILE, '[]', 'utf8');
-    }
-    try {
-      await fs.access(AGENDAMENTOS_FILE);
-    } catch {
-      await fs.writeFile(AGENDAMENTOS_FILE, '[]', 'utf8');
-    }
+    try { await fs.access(REVIEWS_FILE); } catch { await fs.writeFile(REVIEWS_FILE, '[]', 'utf8'); }
+    try { await fs.access(AGENDAMENTOS_FILE); } catch { await fs.writeFile(AGENDAMENTOS_FILE, '[]', 'utf8'); }
     console.log('Arquivo de dados local preparado em', REVIEWS_FILE);
   } catch (err2) {
     console.error('Erro ao preparar armazenamento local:', err2.message);
   }
-}
-
-// ----------- Criar tabelas se não existirem -----------
-if (db) {
-  await db.execute(`
-CREATE TABLE IF NOT EXISTS usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  phone VARCHAR(20)
-);
-`);
-
-  await db.execute(`
-CREATE TABLE IF NOT EXISTS agendamentos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  age INT,
-  phone VARCHAR(20),
-  service VARCHAR(100),
-  data_agendamento DATE,
-  hora TIME,
-  observacoes TEXT
-);
-`);
-
-  await db.execute(`
-CREATE TABLE IF NOT EXISTS reviews (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  author_name VARCHAR(100),
-  content TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`);
-    await db.execute(`
-  CREATE TABLE IF NOT EXISTS reviews (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    author_name VARCHAR(100),
-    content TEXT NOT NULL,
-    rating INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-  `);
-    // garantir coluna rating se tabela antiga não tiver
-    try {
-      await db.execute('ALTER TABLE reviews ADD COLUMN rating INT DEFAULT 0');
-    } catch (errCol) {
-      // se a coluna já existe ou outro erro, ignorar
-    }
-
-  await db.execute(`
-CREATE TABLE IF NOT EXISTS fidelidades (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id INT,
-  pontos INT DEFAULT 0,
-  status VARCHAR(20) DEFAULT 'ativo'
-);
-`);
-} else {
-  console.log('Banco MySQL não disponível — pulando criação de tabelas e usando JSON local quando aplicável.');
 }
 
 
@@ -129,11 +69,30 @@ app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
     const hash = await bcrypt.hash(password, 10);
-    const [result] = await db.execute(
-      'INSERT INTO usuarios (name,email,password,phone) VALUES (?,?,?,?)',
-      [name, email, hash, phone]
-    );
-    res.json({ message: 'Usuário criado com sucesso!', userId: result.insertId });
+    if (db) {
+      try {
+        const user = await Usuario.create({ name, email, password: hash, phone });
+        return res.json({ message: 'Usuário criado com sucesso!', userId: user.id });
+      } catch (errCreate) {
+        console.error('Erro ao salvar via Sequelize, usando fallback JSON:', errCreate.message);
+        // cair para fallback
+      }
+    }
+    // fallback local
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      let content = '[]';
+      try { content = await fs.readFile(USERS_FILE, 'utf8'); } catch {}
+      const arr = JSON.parse(content || '[]');
+      const maxId = arr.reduce((m, u) => (u.id && u.id > m ? u.id : m), 0);
+      const newUser = { id: maxId + 1, name, email, password: hash, phone };
+      arr.push(newUser);
+      await fs.writeFile(USERS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+      return res.json({ message: 'Usuário criado (armazenamento local)', userId: newUser.id });
+    } catch (errLocal) {
+      console.error('Erro no fallback de signup:', errLocal.message);
+      return res.status(500).json({ error: 'Erro ao criar usuário' });
+    }
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: 'Erro ao criar usuário. Email pode já estar cadastrado.' });
@@ -146,14 +105,33 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, senha } = req.body;
-    const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
-    if (!rows.length) return res.status(404).json({ error: 'Usuário não encontrado' });
-
-    const user = rows[0];
-    const match = await bcrypt.compare(senha, user.password);
-    if (!match) return res.status(401).json({ error: 'Senha incorreta' });
-
-    res.json({ message: 'Login realizado com sucesso', userId: user.id });
+    // tentar DB via Sequelize primeiro
+    if (db) {
+      try {
+        const user = await Usuario.findOne({ where: { email } });
+        if (user) {
+          const match = await bcrypt.compare(senha, user.password);
+          if (!match) return res.status(401).json({ error: 'Senha incorreta' });
+          return res.json({ message: 'Login realizado com sucesso', userId: user.id });
+        }
+      } catch (errDb) {
+        console.error('Erro ao consultar DB no login, usando fallback JSON se disponível:', errDb.message);
+      }
+    }
+    // fallback local
+    try {
+      let content = '[]';
+      try { content = await fs.readFile(USERS_FILE, 'utf8'); } catch {}
+      const arr = JSON.parse(content || '[]');
+      const user = arr.find(u => String(u.email) === String(email));
+      if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+      const match = await bcrypt.compare(senha, user.password);
+      if (!match) return res.status(401).json({ error: 'Senha incorreta' });
+      return res.json({ message: 'Login realizado (local)', userId: user.id });
+    } catch (errLocal) {
+      console.error('Erro no fallback de login:', errLocal.message);
+      return res.status(500).json({ error: 'Erro no login' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erro no login' });
@@ -165,11 +143,7 @@ app.post('/api/agendamentos', async (req, res) => {
   try {
     const { name, age, phone, service, date, time, observacoes } = req.body;
     if (db) {
-      await db.execute(
-        `INSERT INTO agendamentos (name, age, phone, service, data_agendamento, hora, observacoes)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, age, phone, service, date, time, observacoes || null]
-      );
+      await Agendamento.create({ name, age: age || null, phone: phone || '', service: service || '', data_agendamento: date || null, hora: time || null, observacoes: observacoes || null });
       res.json({ message: 'Agendamento criado com sucesso' });
     } else {
       // fallback para arquivo JSON
@@ -200,7 +174,7 @@ app.post('/api/agendamentos', async (req, res) => {
 app.get('/api/agendamentos', async (req, res) => {
   try {
     if (db) {
-      const [rows] = await db.execute('SELECT * FROM agendamentos ORDER BY data_agendamento, hora');
+      const rows = await Agendamento.findAll({ order: [['data_agendamento','ASC'], ['hora','ASC']] });
       res.json({ appointments: rows });
     } else {
       const content = await fs.readFile(AGENDAMENTOS_FILE, 'utf8');
@@ -228,7 +202,7 @@ app.delete('/api/agendamentos/:id', async (req, res) => {
   try {
     const { id } = req.params;
     if (db) {
-      await db.execute('DELETE FROM agendamentos WHERE id = ?', [id]);
+      await Agendamento.destroy({ where: { id } });
       res.json({ message: 'Agendamento excluído com sucesso' });
     } else {
       const content = await fs.readFile(AGENDAMENTOS_FILE, 'utf8');
@@ -247,7 +221,7 @@ app.delete('/api/agendamentos/:id', async (req, res) => {
 app.get('/api/reviews', async (req, res) => {
   try {
     if (db) {
-      const [rows] = await db.execute('SELECT * FROM reviews ORDER BY created_at DESC');
+      const rows = await Review.findAll({ order: [['created_at','DESC']] });
       res.json({ reviews: rows });
     } else {
       // ler do arquivo JSON local
@@ -271,10 +245,7 @@ app.post('/api/reviews', async (req, res) => {
     const { author_name, content, rating } = req.body;
     const rValue = Number.isFinite ? (Number(rating) || 0) : (rating || 0);
     if (db) {
-      await db.execute(
-        'INSERT INTO reviews (author_name, content, rating) VALUES (?, ?, ?)',
-        [author_name || 'Anônimo', content, rValue]
-      );
+      await Review.create({ author_name: author_name || 'Anônimo', content, rating: Number(rValue) || 0 });
       res.json({ message: 'Avaliação enviada com sucesso' });
     } else {
       // salvar no arquivo JSON local
@@ -302,11 +273,71 @@ app.post('/api/reviews', async (req, res) => {
 app.post('/api/fidelities/:userId/cancel', async (req, res) => {
   try {
     const { userId } = req.params;
-    await db.execute('UPDATE fidelidades SET status="cancelado" WHERE usuario_id=?', [userId]);
-    res.json({ message: 'Cartão fidelidade cancelado' });
+    if (db) {
+      await Fidelidade.update({ status: 'cancelado' }, { where: { usuario_id: userId } });
+      res.json({ message: 'Cartão fidelidade cancelado' });
+    } else {
+      res.status(500).json({ error: 'Banco não disponível - operação não permitida' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erro ao cancelar cartão' });
+  }
+});
+
+// Adicionar pontos ao cartão de fidelidade (por userId ou email)
+app.post('/api/fidelities/adjust', async (req, res) => {
+  try {
+    const { usuario_id, email, points } = req.body;
+    const pts = Number(points) || 0;
+    if (!usuario_id && !email) return res.status(400).json({ error: 'usuario_id ou email requerido' });
+
+    let uid = usuario_id;
+
+    // se email informado, tentar resolver para usuario_id (DB ou local)
+    if (!uid && email) {
+      if (db) {
+        const user = await Usuario.findOne({ where: { email } });
+        if (user) uid = user.id;
+      }
+      if (!uid) {
+        // tentar local users.json
+        try {
+          const content = await fs.readFile(USERS_FILE, 'utf8');
+          const arr = JSON.parse(content || '[]');
+          const u = arr.find(x => String(x.email) === String(email));
+          if (u) uid = u.id;
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+
+    if (!uid) return res.status(404).json({ error: 'Usuário não encontrado para ajuste de pontos' });
+
+    // Para evitar problemas com constraints no DB, usamos sempre o fallback local para gravação de pontos.
+    const FID_FILE = path.join(DATA_DIR, 'fidelidades.json');
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      let content = '[]';
+      try { content = await fs.readFile(FID_FILE, 'utf8'); } catch {}
+      const arr = JSON.parse(content || '[]');
+      let f = arr.find(x => String(x.usuario_id) === String(uid));
+      if (!f) {
+        f = { id: (arr.reduce((m,a)=> a.id && a.id>m? a.id:m,0))+1, usuario_id: uid, pontos: pts, status: 'ativo' };
+        arr.push(f);
+      } else {
+        f.pontos = (f.pontos||0) + pts;
+      }
+      await fs.writeFile(FID_FILE, JSON.stringify(arr,null,2),'utf8');
+      return res.json({ message: 'Pontos ajustados (local)', usuario_id: uid, pontos: f.pontos });
+    } catch (errF) {
+      console.error('Erro ao ajustar pontos localmente:', errF.message);
+      return res.status(500).json({ error: 'Erro ao ajustar pontos' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao ajustar pontos' });
   }
 });
 

@@ -51,47 +51,8 @@
             <th>Ação</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn-excluir">Excluir</button></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn-excluir">Excluir</button></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn-excluir">Excluir</button></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn-excluir">Excluir</button></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="btn-excluir">Excluir</button></td>
-          </tr>
+        <tbody id="agendaBody">
+          <!-- linhas serão preenchidas via JS -->
         </tbody>
       </table>
     </div>
@@ -100,6 +61,66 @@
   </main>
 
   <script src="main.js" defer></script>
+  <script>
+    // Preenche tabela de agendamentos via API e adiciona botões Excluir / Adicionar Pontos
+    async function carregarAgendamentos() {
+      try {
+        const res = await fetch('/api/agendamentos');
+        const j = await res.json();
+        const rows = j.appointments || [];
+        const tbody = document.getElementById('agendaBody');
+        tbody.innerHTML = '';
+        for (const a of rows) {
+          const tr = document.createElement('tr');
+          const clienteTd = document.createElement('td'); clienteTd.textContent = a.name || '';
+          const telefoneTd = document.createElement('td'); telefoneTd.textContent = a.phone || '';
+          const servTd = document.createElement('td'); servTd.textContent = a.service || '';
+          const dataTd = document.createElement('td'); dataTd.textContent = a.data_agendamento || a.date || '';
+          const horaTd = document.createElement('td'); horaTd.textContent = a.hora || a.time || '';
+          const actionTd = document.createElement('td');
+
+          const delBtn = document.createElement('button'); delBtn.className = 'btn-excluir'; delBtn.textContent = 'Excluir';
+          delBtn.addEventListener('click', async () => {
+            if (!confirm('Excluir este agendamento?')) return;
+            await fetch(`/api/agendamentos/${a.id}`, { method: 'DELETE' });
+            carregarAgendamentos();
+          });
+
+          const addBtn = document.createElement('button'); addBtn.className = 'btn-adicionar'; addBtn.textContent = 'Adicionar Pontos';
+          addBtn.addEventListener('click', async () => {
+            // prompt para usuário inserir email ou userId e quantidade de pontos
+            const who = prompt('Informe userId ou email do usuário (ex: 12 ou usuario@ex.com):');
+            if (!who) return;
+            const ptsStr = prompt('Quantos pontos adicionar? (número)');
+            const pts = Number(ptsStr);
+            if (!Number.isFinite(pts)) { alert('Número inválido'); return; }
+            const payload = {};
+            if (/^\d+$/.test(who)) payload.usuario_id = Number(who); else payload.email = who;
+            payload.points = pts;
+            const r = await fetch('/api/fidelities/adjust', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+            const jr = await r.json();
+            if (!r.ok) alert(jr.error || 'Erro'); else alert(jr.message + '\nPontos atuais: ' + (jr.pontos ?? 'n/a'));
+          });
+
+          actionTd.appendChild(delBtn);
+          actionTd.appendChild(document.createTextNode(' '));
+          actionTd.appendChild(addBtn);
+
+          tr.appendChild(clienteTd);
+          tr.appendChild(telefoneTd);
+          tr.appendChild(servTd);
+          tr.appendChild(dataTd);
+          tr.appendChild(horaTd);
+          tr.appendChild(actionTd);
+          tbody.appendChild(tr);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar agendamentos:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarAgendamentos);
+  </script>
 </body>
 
 </html>

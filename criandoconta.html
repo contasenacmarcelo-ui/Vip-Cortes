@@ -48,23 +48,44 @@
 
                 <input id="Nome" type="text" placeholder="Nome:" class="botao">
 
-                <input id="Telefone" type="text" placeholder="Telefone:" class="botao2">
+                <input id="Email" type="email" placeholder="Email:" class="botao2">
 
-                <input id="Data" type="text" placeholder="Data de Nascimento:" class="botao3">
+                <input id="Telefone" type="text" placeholder="Telefone:" class="botao3">
 
-                <input id="Senha" type="text" placeholder="Crie uma senha:" class="botao4">
+                <input id="Data" type="text" placeholder="Data de Nascimento:" class="botao4">
+
+                <input id="Senha" type="password" placeholder="Crie uma senha:" class="botao5">
 
                 <div class="caixa-vinte">
-
                     <button type="submit" class="botao5">Enviar e Entrar</button>
-
                 </div>
             </form>
 
         </div>
 
         <script>
-            </script>
+            document.getElementById('formulario').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const name = document.getElementById('Nome').value.trim();
+                const email = document.getElementById('Email').value.trim();
+                const phone = document.getElementById('Telefone').value.trim();
+                const password = document.getElementById('Senha').value.trim();
+                if (!name || !email || !password) { alert('Preencha nome, email e senha.'); return; }
+                try {
+                    const res = await fetch('/api/signup', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, password, phone })
+                    });
+                    const j = await res.json();
+                    if (!res.ok) { alert(j.error || 'Erro ao criar conta'); return; }
+                    localStorage.setItem('userId', j.userId);
+                    window.location.href = 'perfil (2).html';
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro ao conectar ao servidor.');
+                }
+            });
+        </script>
             
 </body>
 
