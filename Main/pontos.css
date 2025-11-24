@@ -28,7 +28,7 @@ header {
     display: flex;
     gap: 20px;
     font-family: "Big Shoulders", sans-serif;
-    font-size: 35px;
+    font-size: 37px;
     text-decoration: none;
     align-items: center;
 }
@@ -37,7 +37,7 @@ header {
     flex: auto;
     text-align: center;
     height: 90px;
-    width: 120px;
+    width: 121px;
 }
 
 .item {
