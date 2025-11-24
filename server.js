@@ -1,6 +1,7 @@
 // server.js - backend completo VipCortes (MySQL local)
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 
@@ -9,9 +10,16 @@ const PORT = 10000;
 
 // ----------- Middleware -----------
 app.use(cors());
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('.')); // serve HTML/CSS/JS da mesma pasta
+
+app.use(express.json());
+
+const _dirname = path.resolve();
+
+app.use(express.static(path.join(_dirname, "HTML")));
 
 // ----------- Conexão MySQL -----------
 let db;
