@@ -13,6 +13,12 @@ function escapeHtml(str) {
   return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[s]);
 }
 
+// render star SVG (filled true/false)
+function starSvg(filled) {
+  const path = 'M12 .587l3.668 7.431 8.164 1.182-5.916 5.754 1.396 8.138L12 18.896 4.688 23.092l1.396-8.138L0.168 9.2l8.164-1.182z';
+  return `<svg class="rating-star ${filled? 'filled': ''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${path}"/></svg>`;
+}
+
 // ------------------ AGENDAMENTO ------------------
 (function setupAgendar() {
   const form = document.querySelector('form#agendar') || document.querySelector('form');
@@ -117,11 +123,19 @@ function escapeHtml(str) {
 
 // ------------------ AVALIAÇÕES ------------------
 (function setupAvaliacoes() {
-  // só executa se estiver na Avaliações.html
-  if (!window.location.pathname.toLowerCase().includes('avaliações.html')) return;
+  // só executa se estiver na página de avaliações (lida tanto com 'Avaliações.html' quanto com 'Avaliacoes.html' sem acentos)
+  const pathname = window.location.pathname.split('/').pop() || '';
+  const filename = decodeURIComponent(pathname).toLowerCase();
+  // remove diacríticos pra comparar de forma robusta
+    const normalized = filename.normalize ? filename.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : filename;
+  if (!normalized.includes('avaliacoes')) return;
 
   const container = document.querySelector('.containerava');
   if (!container) return;
+
+  const PAGINATION_WRAPPER_ID = 'reviews-pagination';
+  let currentPage = 1;
+  const PAGE_SIZE = 9; // exibir 9 avaliações por página (3 colunas x 3 linhas)
 
   async function carregarAvaliacoes() {
     try {
@@ -130,17 +144,33 @@ function escapeHtml(str) {
 
       if (!reviews.length) {
         container.innerHTML = `<div style="text-align:center; font-size:18px; color:#555;">Nenhuma avaliação cadastrada ainda.</div>`;
+        // remover paginação se existir
+        const old = document.getElementById(PAGINATION_WRAPPER_ID);
+        if (old) old.remove();
         return;
       }
 
-      for (const review of reviews) {
+      // render com paginação
+      const total = reviews.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = reviews.slice(start, start + PAGE_SIZE);
+
+      for (const review of pageItems) {
         const div = document.createElement('div');
         div.className = 'coluns';
 
         div.innerHTML = `
           <div class="pefilava">
             <img src="assets/perfil.png" alt="" class="perfilava-foto">
-            <span class="nome">${escapeHtml(review.author_name || 'Anônimo')}</span>
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <span class="nome">${escapeHtml(review.author_name || 'Anônimo')}</span>
+              <div class="rating" aria-hidden="true">
+                ${[1,2,3,4,5].map(i => starSvg(i <= Number(review.rating||0))).join('')}
+                <span class="rating-number">${Number(review.rating||0)}/5</span>
+              </div>
+            </div>
           </div>
           <div class="avali">
             <span>${escapeHtml(review.content)}</span>
@@ -149,6 +179,40 @@ function escapeHtml(str) {
 
         container.appendChild(div);
       }
+
+      // pagination controls
+      let pager = document.getElementById(PAGINATION_WRAPPER_ID);
+      if (!pager) {
+        pager = document.createElement('div');
+        pager.id = PAGINATION_WRAPPER_ID;
+        pager.className = 'reviews-pager';
+        container.parentNode.appendChild(pager);
+      }
+      pager.innerHTML = '';
+
+      const createButton = (label, disabled, onClick) => {
+        const b = document.createElement('button');
+        b.textContent = label;
+        b.disabled = disabled;
+        b.className = 'pager-btn';
+        b.addEventListener('click', onClick);
+        return b;
+      };
+
+      pager.appendChild(createButton('« Anterior', currentPage <= 1, () => { currentPage--; carregarAvaliacoes(); }));
+
+      // page numbers (mostrar até 5 números: current ±2)
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(totalPages, currentPage + 2);
+      for (let p = startPage; p <= endPage; p++) {
+        const btn = document.createElement('button');
+        btn.textContent = String(p);
+        btn.className = 'pager-btn page-number' + (p === currentPage ? ' active' : '');
+        btn.addEventListener('click', () => { currentPage = p; carregarAvaliacoes(); });
+        pager.appendChild(btn);
+      }
+
+      pager.appendChild(createButton('Próximo »', currentPage >= totalPages, () => { currentPage++; carregarAvaliacoes(); }));
     } catch (err) {
       console.error('Erro ao carregar avaliações:', err);
       container.innerHTML = `<div style="text-align:center; color:red;">Erro ao carregar avaliações</div>`;
@@ -169,12 +233,30 @@ function escapeHtml(str) {
 
   let selectedRating = 0;
 
+  // inicializa visual da tabela de estrelas
+  const initStarTable = () => {
+    const sel = document.getElementById('selected-rating');
+    if (sel) sel.textContent = `${selectedRating} de 5`;
+    const cells = document.querySelectorAll('.star-table .star-cell');
+    cells.forEach(c => c.classList.remove('selected'));
+  };
+  // chamar agora para garantir estado inicial
+  initStarTable();
+
   // funcionalidade das estrelas
   stars.forEach((star, index) => {
     star.addEventListener('click', () => {
       selectedRating = index + 1;
       stars.forEach((s, i) => {
         s.classList.toggle('active', i < selectedRating);
+      });
+      // atualizar contador e tabela visual
+      const sel = document.getElementById('selected-rating');
+      if (sel) sel.textContent = `${selectedRating} de 5`;
+      const cells = document.querySelectorAll('.star-table .star-cell');
+      cells.forEach(c => {
+        const v = Number(c.getAttribute('data-value')) || 0;
+        c.classList.toggle('selected', v <= selectedRating);
       });
     });
   });
@@ -190,8 +272,9 @@ function escapeHtml(str) {
     }
 
     const payload = {
-      author_name: 'Usuário', // pode ser ajustado para nome real se houver login
-      content: content
+      author_name: 'Anônimo', // manter anonimato por padrão
+      content: content,
+      rating: selectedRating || 0
     };
 
     try {

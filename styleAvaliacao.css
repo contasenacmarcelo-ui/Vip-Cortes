@@ -172,59 +172,84 @@
 
 /* --- ESTILOS DAS AVALIAÇÕES INDIVIDUAIS (CORRIGIDO ALINHAMENTO) --- */
 
+/* Avaliações: mostrar vários cards lado a lado e alinhar conteúdo internamente */
 .containerava {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    justify-items: center;
+    align-items: start;
+    padding: 30px 20px 20px 20px;
+    position: relative;
+    z-index: 2; /* garantir que os cards fiquem acima do overlay */
 }
 .coluns {
     display: flex;
-    flex-direction: column;
-    max-width: 300px;
-    margin: 0 15px; 
+    flex-direction: row; /* foto+nome à esquerda, comentário à direita */
+    align-items: flex-start;
+    background: rgba(255,255,255,0.02);
+    padding: 15px;
+    border-radius: 16px;
+    gap: 20px;
+    width: 100%; /* ocupar a coluna inteira */
+    max-width: 720px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 3; /* acima do overlay */
 }
 
 .pefilava{
-    /* Usa display flex para alinhar foto e nome */
     display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    /* Adiciona margem inferior para separar do .avali */
-    margin-bottom: 10px;
-    /* Removido margin-left: 0, pois a remoção da margem negativa no código original já corrigiu a posição */
+    flex-direction: column; /* imagem em cima, nome abaixo */
+    align-items: center;
+    width: 120px; /* largura reservada para a coluna esquerda */
+    gap: 8px;
 }
 .perfilava-foto{
-    width: 80px; 
+    width: 80px;
     height: 80px;
-    /* Espaço entre a foto e o nome */
-    margin-right: 15px; 
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.12);
 }
 
 .nome{
     color: white;
-    font-size: 30px;
-    /* Garante que o nome não empurre a caixa de avaliação para a próxima linha */
-    white-space: nowrap; 
+    font-size: 18px;
+    text-align: center;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* Removido width e padding-left para melhor fluxo */
+    max-width: 110px;
 }
 
 .avali{
-    color: white;
+    pointer-events: none;
+    color: #111; /* texto escuro sobre fundo amarelo */
     background-color: #f0b65f;
-    width: 270px;
-    /* Altura automática para o texto se adaptar */
-    height: auto; 
-    min-height: 150px; /* Garante a altura mínima */
-    border-radius: 30px;
-    padding: 15px; 
-    font-size: 20px;
-    margin-top: 0; 
-    /* CORREÇÃO DO ALINHAMENTO: Usa uma margem negativa para alinhar a caixa do texto com a foto e o nome */
-    margin-left: -95px; /* Ajuste este valor (negativo) até que a caixa se alinhe perfeitamente com a foto. */
-    position: relative;
+    flex: 1; /* ocupa o restante do espaço do card */
+    min-height: 110px;
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 18px;
+    line-height: 1.4;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* Para telas pequenas, empilhar internamente (foto em cima, comentário abaixo) */
+@media (max-width: 700px) {
+    .coluns {
+        flex-direction: column;
+        width: calc(100% - 40px);
+        align-items: stretch;
+    }
+    .pefilava{
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 12px;
+    }
+    .nome{ text-align: left; }
 }
 
 /* --- MEDIA QUERIES (Mantidos) --- */
@@ -456,3 +481,58 @@
         margin-top: 40px;
     }
 }
+
+.rating{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.rating-star{
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.rating-star path{ fill: #ddd; }
+.rating-star.filled path{ fill: #f0b65f; }
+.rating-number{
+    color: #111;
+    background: #f0b65f;
+    font-size: 13px;
+    margin-left: 8px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+/* estilos do pager */
+.reviews-pager{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin: 18px 0 40px 0;
+}
+.pager-btn{
+    background:#222;
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.08);
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+.pager-btn[disabled]{
+    opacity:0.4;
+    cursor:default;
+}
+.pager-btn.active{
+    background:#f0b65f;
+    color:#111;
+    font-weight:700;
+}
+
+/* star table in avalienos */
+.star-table{ display:inline-flex; gap:8px; justify-content:center; }
+.star-cell{ display:inline-block; width:34px; height:34px; border-radius:6px; background:#111; color:#fff; display:flex; align-items:center; justify-content:center; }
+.star-cell.selected{ background:#f0b65f; color:#111; }
