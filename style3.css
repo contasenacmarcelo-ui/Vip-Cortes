@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+.perfil {
+ background-color: #d6b8b800;
+ border-radius: 40px;
+}
+
+.perfil:hover {
+  color: #f0b65f;
+  transform: translatey(-9px);
+  transition: 0.2s;
+}
+
 .container {
   background-color: black;
   height: 80px;
@@ -112,6 +123,15 @@
     display: flex;
   }
 
+  .container {
+    justify-content: flex-end; /* empurra tudo para a direita */
+    padding-right: 10px; /* afasta um pouco da borda */
+  }
+
+  .logo {
+    margin-left: auto; /* agora funciona */
+  }
+
 }
 
 .main1 {
@@ -124,7 +144,7 @@
   justify-content: center;
   align-items: flex-end;
   z-index: 0;
-
+  overflow: hidden;
 }
 
 .main1 {
@@ -144,7 +164,7 @@
 
 .form {
   align-items: center;
-  width: 600px;
+  width: 500px;
   margin-top: 10%;
 }
 
@@ -169,6 +189,7 @@
 .fone,
 .date,
 .horario,
+
 select {
   background-color: #41404080;
   color: aliceblue;
@@ -218,12 +239,12 @@ input::placeholder {
   align-items: center;
 }
 
-/*agradecimento por agendar*/
+/*-------------------------------------------agradecimento por agendar-------------------------------*/
 
 .main2 {
   width: 100%;
   min-height: 100vh;
-  background-image: url('./HTML/assets/fundo preto2.jpeg');
+  background-image: url('assets/fundo preto2.jpeg');
   background-size: cover;
   background-position: center;
   justify-content: center;
@@ -424,7 +445,14 @@ input::placeholder {
   }
 }
 
-@media (min-width: 761px) and (max-width: 1300px) {
+@media (min-width: 761px) and (max-width: 1079px) {
+
+  .logo {
+    height: 90px;
+    width: 120px;
+    align-items: center;
+    margin-left: auto;
+  }
 
     .form h1 {
         padding-top: 15%;
@@ -572,8 +600,8 @@ input::placeholder {
 }
 
 .profile-box img {
-  width: 90px;
-  height: 90px;
+  width: 70px;
+  height: auto;
   border-radius: 50%; /* FOTO REDONDA */
   border: 2px solid #f0b65f;
   object-fit: cover;
@@ -594,13 +622,6 @@ input::placeholder {
 @media (max-width: 1079px) {
   #btnHamb {
     display: flex !important;
-  }
-
-  .logo {
-    height: 90px;
-    width: 120px;
-    align-items: center;
-    justify-content: center;
   }
 
 }

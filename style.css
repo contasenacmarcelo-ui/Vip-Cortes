@@ -13,6 +13,17 @@ body {
     overflow-x: hidden;
 }
 
+.perfil {
+    background-color: #d6b8b800;
+    border-radius: 40px;
+   }
+   
+   .perfil:hover {
+     color: #f0b65f;
+     transform: translatey(-9px);
+     transition: 0.2s;
+   }   
+
 .container {
     background-color: black;
     height: 80px;
@@ -90,12 +101,34 @@ body {
     display: none;
     cursor: pointer;
     padding: 0px 2%;
+    z-index: 1;
 }
 
-.menu-icon img {
-    height: 50px;
-    width: 50px;
-}
+
+
+@media (max-width: 1079px) {
+    .item,
+    .entrar,
+    .agendar,
+    .entrar2 {
+      display: none;
+    }
+    .menu-icon {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .container {
+      justify-content: flex-end; /* empurra tudo para a direita */
+      padding-right: 10px; /* afasta um pouco da borda */
+    }
+  
+    .logo {
+      margin-left: auto; /* agora funciona */
+    }
+  
+  }
+  
 
 .barber_background {
     opacity: calc(35%);
@@ -2518,3 +2551,118 @@ main {
         }
     }
 }
+
+/* ============================= */
+/*        MENU LATERAL           */
+/* ============================= */
+
+.backdrop-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 9;
+  }
+  
+  .backdrop-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: -270px; /* começa escondido */
+    width: 260px;
+    height: 100vh;
+    background: #111;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s ease;
+    z-index: 10000;
+  }
+  
+  .side-menu.open {
+    left: 0;
+  }
+  
+  /* Cabeçalho do menu */
+  .top-menu-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .top-menu-row h3 {
+    font-family: "Big Shoulders";
+    font-size: 32px;
+    margin: 0;
+  }
+  
+  .close-x {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+  }
+  
+  /* Links */
+  .menu-items {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 18px;
+  }
+  
+  .menu-items a {
+    font-family: "Big Shoulders";
+    font-size: 28px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .menu-items a:hover {
+    color: #f0b65f;
+    transform: translateX(8px);
+    transition: 0.2s;
+  }
+  
+  /* Área do perfil */
+  .profile-box {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .profile-box img {
+    width: 70px;
+    height: auto;
+    border-radius: 50%; /* FOTO REDONDA */
+    border: 2px solid #f0b65f;
+    object-fit: cover;
+  }
+  
+  .menu-icon {
+    position: absolute;
+    left: 20px;
+    top: 15px;
+    z-index: 20;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none; /* mobile-only */
+  }
+  
+  /* Mostrar o botão apenas no mobile */
+  @media (max-width: 1079px) {
+    #btnHamb {
+      display: flex !important;
+    }
+  
+  }
+  
