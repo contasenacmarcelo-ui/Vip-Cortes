@@ -1,6 +1,7 @@
 // server.js - backend completo VipCortes (MySQL local)
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
@@ -11,9 +12,16 @@ const PORT = 10000;
 
 // ----------- Middleware -----------
 app.use(cors());
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('.')); // serve HTML/CSS/JS da mesma pasta
+
+app.use(express.json());
+
+const _dirname = path.resolve();
+
+app.use(express.static(path.join(_dirname, "HTML")));
 
 // ----------- Conexão MySQL -----------
 let db;
@@ -113,6 +121,7 @@ CREATE TABLE IF NOT EXISTS fidelidades (
   console.log('Banco MySQL não disponível — pulando criação de tabelas e usando JSON local quando aplicável.');
 }
 
+
 // ----------- Rotas API -----------
 
 // Signup
@@ -130,6 +139,8 @@ app.post('/api/signup', async (req, res) => {
     res.status(400).json({ error: 'Erro ao criar usuário. Email pode já estar cadastrado.' });
   }
 });
+
+
 
 // Login
 app.post('/api/login', async (req, res) => {

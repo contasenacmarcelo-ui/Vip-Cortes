@@ -1,0 +1,353 @@
+    /* RESET / BASE */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box
+    }
+
+    html,
+    body {
+        height: 100%;
+        background: #000;
+        color: #fff;
+        font-family: "Big Shoulders", "Open Sans", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block
+    }
+
+    /* HEADER (reaproveita sua classe .container) */
+    header.container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: #141010;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        gap: 16px;
+        z-index: 1000;
+        border-bottom: 5px solid #ffbd59
+    }
+
+    .container_main,
+    .container_login {
+        display: flex;
+        align-items: center;
+        gap: 18px
+    }
+
+    .container_main .logo {
+        width: 120px;
+        height: auto
+    }
+
+    .container_main .item,
+    .container_login .entrar,
+    .container_login .entrar2 {
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px
+    }
+
+    .container_login .entrar2 {
+        color: #f0b65f
+    }
+
+    .menu-icon {
+        display: none;
+        background: transparent;
+        border: none;
+        cursor: pointer
+    }
+
+    /* Espaço para o conteúdo principal abaixo do header fixo */
+    main {
+        margin-top: 110px;
+        padding: 18px
+    }
+
+    /* WRAPPER do perfil: grid com avatar à esquerda e conteúdo à direita */
+    .profile-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 28px;
+        align-items: start
+    }
+
+    /* Card frame dourado (borda) como bloco de destaque no topo do grid */
+    .borda {
+        grid-column: 1/-1;
+        border-radius: 28px;
+        border: 3px solid #e8ad54;
+        background: linear-gradient(180deg, rgba(20, 16, 16, 0.04), rgba(20, 16, 16, 0.02));
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6)
+    }
+
+    .linha {
+        height: 5px;
+        background: #fffffe;
+        opacity: .55;
+        width: 100%;
+        margin: 12px 0 18px
+    }
+
+    /* AVATAR */
+    .left-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px
+    }
+
+    .pepe {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 6px solid rgba(255, 255, 255, 0.06);
+        background: linear-gradient(#dcdcdc, #9a9a9a)
+    }
+
+    .vipcoin {
+        width: 140px;
+        margin-top: 6px
+    }
+
+    .pontos-row {
+        display: flex;
+        gap: 8px;
+        align-items: center
+    }
+
+    .pontos {
+        color: #fff
+    }
+
+    .fid {
+        color: #ffbb00;
+        font-weight: 700
+    }
+
+    .xxcoin {
+        font-size: 1.15rem;
+        color: #fff
+    }
+
+    /* RIGHT COLUMN - infos e service card */
+    .titu {
+        grid-column: 1/-1;
+        text-align: center;
+        font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+        color: #fff;
+        letter-spacing: .6px;
+        margin-bottom: 6px
+    }
+
+    .user-data {
+        display: flex;
+        flex-direction: column;
+        gap: 8px
+    }
+
+    .name,
+    .email,
+    .Num {
+        font-size: clamp(1rem, 1.6vw, 1.35rem);
+        color: #fff
+    }
+
+    /* Service card (branco) */
+    .service1 {
+        background: #fff;
+        color: #000;
+        border-radius: 20px;
+        padding: 20px;
+        min-height: 220px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35)
+    }
+
+    .service1 .info-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 12px
+    }
+
+    .service1 .info-item {
+        font-size: clamp(1rem, 1.8vw, 1.25rem);
+        color: #000
+    }
+
+    /* botões */
+    .buttons-row {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin-top: 14px
+    }
+
+    .bobo1,
+    .bobo2 {
+        border: none;
+        padding: 12px 22px;
+        border-radius: 28px;
+        font-family: "Big Shoulders", Arial, sans-serif;
+        font-size: 1.05rem;
+        cursor: pointer;
+        min-width: 200px
+    }
+
+    .bobo1 {
+        background: #e20b00;
+        color: #fff;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35)
+    }
+
+    .bobo2 {
+        background: #777;
+        color: #fff
+    }
+
+    /* pequenas legendas dentro do card branco */
+    .label {
+        font-weight: 700
+    }
+
+    .value {
+        color: #111
+    }
+
+    /* BADGE debug removível */
+    #resp-badge {
+        position: fixed;
+        right: 8px;
+        bottom: 8px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding: 6px 8px;
+        font-size: 11px;
+        border-radius: 6px;
+        z-index: 2147483647;
+        pointer-events: none;
+        opacity: 0.6
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width:992px) {
+        .profile-wrapper {
+            grid-template-columns: 260px 1fr
+        }
+
+        .pepe {
+            width: 200px;
+            height: 200px
+        }
+
+        .menu-icon {
+            display: block
+        }
+    }
+
+    @media (max-width:841px) {
+        header.container {
+            padding-right: 36%
+        }
+
+        main {
+            margin-top: 96px
+        }
+
+        .profile-wrapper {
+            grid-template-columns: 1fr;
+            gap: 12px
+        }
+
+        .titu {
+            text-align: center;
+            margin-top: 6px
+        }
+
+        .pepe {
+            width: 180px;
+            height: 180px;
+            margin: 6px auto
+        }
+
+        .service1 {
+            order: 99;
+            width: 94%;
+            margin: 10px auto
+        }
+
+        .buttons-row {
+            justify-content: center
+        }
+
+        .bobo1,
+        .bobo2 {
+            min-width: 80%;
+            max-width: 560px
+        }
+    }
+
+    @media (max-width:556px) {
+        .pepe {
+            width: 140px;
+            height: 140px
+        }
+
+        .name,
+        .email,
+        .Num {
+            text-align: center
+        }
+
+        .bobo1,
+        .bobo2 {
+            width: 94%
+        }
+
+        .service1 {
+            padding: 14px;
+            border-radius: 18px
+        }
+    }
+
+    @media (max-width:405px) {
+        .pepe {
+            width: 120px;
+            height: 120px
+        }
+
+        .titu {
+            font-size: 1.1rem
+        }
+
+        .bobo1,
+        .bobo2 {
+            font-size: .95rem;
+            padding: 10px;
+            border-radius: 22px
+        }
+    }
+
+    /* evitar overflow horizontal */
+    body,
+    header,
+    main,
+    nav {
+        overflow-x: hidden
+    }
