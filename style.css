@@ -69,7 +69,6 @@ body {
 
 .container_left {
     display: flex;
-    justify-content: space-between;
     font-size: 35px;
     gap: 28px;
     text-decoration: none;
@@ -80,7 +79,6 @@ body {
 
 .container_right {
     display: flex;
-    justify-content: space-between;
     font-size: 35px;
     gap: 28px;
     text-decoration: none;

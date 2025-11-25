@@ -54,5 +54,19 @@
     "email": "12132321@gmail.com",
     "password": "$2a$10$.d63kYjDOr7RH6v6PYe0COqH3kVdNSscmNQd06RwUgKOERTYCB9iq",
     "phone": "321312313123133"
+  },
+  {
+    "id": 9,
+    "name": "Marco tulio",
+    "email": "689467596@gmail.com",
+    "password": "$2a$10$Ra/S9veyLmimwtClhX.Sye9h/B5fz7Ze4Xuv3QFoG.oRDquDMC6O6",
+    "phone": "llçiyp79p"
+  },
+  {
+    "id": 10,
+    "name": "Marco tulio",
+    "email": "689467596@gmail.com",
+    "password": "$2a$10$Kq.oJK95GEKLD2t/.EhvQ.WPA.1r85maaIEfY5uOodYn2E4awIg/C",
+    "phone": "86867788"
   }
 ]
