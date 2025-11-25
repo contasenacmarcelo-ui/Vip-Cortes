@@ -1,353 +1,517 @@
-    /* RESET / BASE */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box
+ /* ===== RESET E BASE ===== */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    background: #000;
+    color: #fff;
+    font-family: "Open Sans", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ===== HEADER ===== */
+header.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: #141010;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 20px;
+    z-index: 1000;
+    border-bottom: 4px solid #ffbd59;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.container_main, .container_login {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.container_main .logo {
+    width: 100px;
+    height: auto;
+}
+
+.container_main .item, .container_login .entrar {
+    color: #fff;
+    text-decoration: none;
+    font-size: 34px;
+    font-weight: 500;
+    font-family: "Big Shoulders", sans-serif;
+    transition: color 0.3s;
+}
+
+.container_main .item:hover, .container_login .entrar:hover {
+    color: #ffbd59;
+}
+
+.container_login .entrar2 {
+    color: #f0b65f;
+    text-decoration: none;
+    font-size: 34px;
+    font-weight: 500;
+    font-family: "Big Shoulders", sans-serif;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+    margin-top: 100px;
+    padding: 30px 20px;
+    min-height: calc(100vh - 100px);
+}
+
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.profile-header h1 {
+    font-family: "Big Shoulders", Arial, sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffbd59, #ffc980);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-header p {
+    color: #aaa;
+    font-size: 1rem;
+}
+
+/* ===== PROFILE CONTENT GRID ===== */
+.profile-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* ===== LEFT COLUMN: AVATAR E FIDELIDADE ===== */
+.profile-card {
+    background: linear-gradient(135deg, rgba(255, 189, 89, 0.08), rgba(20, 16, 16, 0.4));
+    border: 2px solid rgba(255, 189, 89, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 5px solid #ffbd59;
+    object-fit: cover;
+    margin: 0 auto 30px;
+    background: linear-gradient(135deg, #dcdcdc, #9a9a9a);
+    box-shadow: 0 15px 40px rgba(255, 189, 89, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+}
+
+.loyalty-badge {
+    background: rgba(255, 189, 89, 0.15);
+    border: 2px solid #ffbd59;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.loyalty-label {
+    color: #ffbd59;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.loyalty-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.points-number {
+    font-family: "Big Shoulders", Arial, sans-serif;
+    font-size: 3rem;
+    color: #ffbd59;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.coin-icon {
+    width: 90px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(255, 189, 89, 0.3));
+}
+
+/* ===== RIGHT COLUMN: INFORMAÇÕES E SERVIÇO ===== */
+.profile-details {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(20, 16, 16, 0.3));
+    border: 2px solid rgba(255, 189, 89, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.info-group {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-group:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-label {
+    color: #ffbd59;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.info-value {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.info-value.empty {
+    color: #888;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+/* ===== SERVIÇO AGENDADO ===== */
+.service-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(255, 189, 89, 0.3);
+}
+
+.service-title {
+    color: #ffbd59;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.service-card {
+    background: linear-gradient(135deg, rgba(255, 189, 89, 0.1), rgba(20, 16, 16, 0.3));
+    border: 1px solid rgba(255, 189, 89, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.service-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-item-label {
+    color: #ffbd59;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.service-item-value {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.service-empty {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-style: italic;
+}
+
+/* ===== BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 13px 30px;
+    border: none;
+    border-radius: 25px;
+    font-family: "Big Shoulders", Arial, sans-serif;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 140px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-reschedule {
+    background: linear-gradient(135deg, #ffbd59, #ffc980);
+    color: #000;
+}
+
+.btn-reschedule:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 189, 89, 0.4);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #e20b00, #ff4444);
+    color: #fff;
+}
+
+.btn-cancel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(226, 11, 0, 0.4);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 992px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 
-    html,
-    body {
-        height:  100%;
-        background: #000;
-        color: #fff;
-        font-family: "Big Shoulders", "Open Sans", Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale
+    .profile-details {
+        padding: 30px;
     }
 
-    img {
-        max-width: 100%;
-        height: auto;
-        display: block
+    .service-grid {
+        grid-template-columns: 1fr;
     }
 
-    /* HEADER (reaproveita sua classe .container) */
+    main {
+        margin-top: 90px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
     header.container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 80px;
-        background: #141010;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 18px;
-        gap: 16px;
-        z-index: 1000;
-        border-bottom: 5px solid #ffbd59
-    }
-
-    .container_main,
-    .container_login {
-        display: flex;
-        align-items: center;
-        gap: 18px
+        height: 70px;
+        padding: 0 15px;
     }
 
     .container_main .logo {
-        width: 120px;
-        height: auto
+        width: 80px;
     }
 
-    .container_main .item,
-    .container_login .entrar,
-    .container_login .entrar2 {
-        color: #fff;
-        text-decoration: none;
-        font-size: 18px
-    }
-
-    .container_login .entrar2 {
-        color: #f0b65f
-    }
-
-    .menu-icon {
+    .container_main .item, .container_login .entrar {
+        font-size: 0.85rem;
         display: none;
-        background: transparent;
-        border: none;
-        cursor: pointer
     }
 
-    /* Espaço para o conteúdo principal abaixo do header fixo */
+    .container_main .item:first-of-type {
+        display: inline-block;
+    }
+
     main {
-        margin-top: 110px;
-        padding: 18px
+        margin-top: 85px;
+        padding: 20px 15px;
     }
 
-    /* WRAPPER do perfil: grid com avatar à esquerda e conteúdo à direita */
-    .profile-wrapper {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 28px;
-        align-items: start
+    .profile-container {
+        padding: 0;
     }
 
-    /* Card frame dourado (borda) como bloco de destaque no topo do grid */
-    .borda {
-        grid-column: 1/-1;
-        border-radius: 28px;
-        border: 3px solid #e8ad54;
-        background: linear-gradient(180deg, rgba(20, 16, 16, 0.04), rgba(20, 16, 16, 0.02));
-        padding: 18px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6)
+    .profile-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
     }
 
-    .linha {
-        height: 5px;
-        background: #fffffe;
-        opacity: .55;
-        width: 100%;
-        margin: 12px 0 18px
+    .profile-card {
+        padding: 25px;
     }
 
-    /* AVATAR */
-    .left-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px
+    .avatar {
+        width: 180px;
+        height: 180px;
     }
 
-    .pepe {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 6px solid rgba(255, 255, 255, 0.06);
-        background: linear-gradient(#dcdcdc, #9a9a9a)
+    .points-number {
+        font-size: 2.2rem;
     }
 
-    .vipcoin {
-        width: 140px;
-        margin-top: 6px
+    .coin-icon {
+        width: 70px;
     }
 
-    .pontos-row {
-        display: flex;
-        gap: 8px;
-        align-items: center
+    .profile-details {
+        padding: 25px;
     }
 
-    .pontos {
-        color: #fff
+    .info-value {
+        font-size: 1.1rem;
     }
 
-    .fid {
-        color: #ffbb00;
-        font-weight: 700
+    .btn {
+        padding: 11px 20px;
+        font-size: 0.85rem;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    header.container {
+        height: 60px;
+        padding: 0 10px;
     }
 
-    .xxcoin {
-        font-size: 1.15rem;
-        color: #fff
+    .container_main .logo {
+        width: 70px;
     }
 
-    /* RIGHT COLUMN - infos e service card */
-    .titu {
-        grid-column: 1/-1;
-        text-align: center;
-        font-size: clamp(1.6rem, 3.6vw, 2.4rem);
-        color: #fff;
-        letter-spacing: .6px;
-        margin-bottom: 6px
+    main {
+        margin-top: 75px;
+        padding: 15px 10px;
     }
 
-    .user-data {
-        display: flex;
-        flex-direction: column;
-        gap: 8px
+    .profile-header h1 {
+        font-size: 1.4rem;
     }
 
-    .name,
-    .email,
-    .Num {
-        font-size: clamp(1rem, 1.6vw, 1.35rem);
-        color: #fff
+    .profile-header p {
+        font-size: 0.9rem;
     }
 
-    /* Service card (branco) */
-    .service1 {
-        background: #fff;
-        color: #000;
-        border-radius: 20px;
+    .profile-card, .profile-details {
         padding: 20px;
-        min-height: 220px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35)
+        border-radius: 15px;
     }
 
-    .service1 .info-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 12px
+    .avatar {
+        width: 150px;
+        height: 150px;
+        border-width: 4px;
+        margin-bottom: 20px;
     }
 
-    .service1 .info-item {
-        font-size: clamp(1rem, 1.8vw, 1.25rem);
-        color: #000
+    .points-number {
+        font-size: 2rem;
     }
 
-    /* botões */
-    .buttons-row {
-        display: flex;
-        gap: 16px;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        margin-top: 14px
+    .coin-icon {
+        width: 60px;
     }
 
-    .bobo1,
-    .bobo2 {
-        border: none;
-        padding: 12px 22px;
-        border-radius: 28px;
-        font-family: "Big Shoulders", Arial, sans-serif;
-        font-size: 1.05rem;
-        cursor: pointer;
-        min-width: 200px
+    .info-value {
+        font-size: 1rem;
     }
 
-    .bobo1 {
-        background: #e20b00;
-        color: #fff;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35)
+    .loyalty-badge {
+        padding: 20px;
     }
 
-    .bobo2 {
-        background: #777;
-        color: #fff
+    .service-grid {
+        gap: 15px;
     }
 
-    /* pequenas legendas dentro do card branco */
-    .label {
-        font-weight: 700
+    .service-item-label {
+        font-size: 0.65rem;
     }
 
-    .value {
-        color: #111
+    .service-item-value {
+        font-size: 1rem;
     }
 
-    /* BADGE debug removível */
-    #resp-badge {
-        position: fixed;
-        right: 8px;
-        bottom: 8px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #fff;
-        padding: 6px 8px;
-        font-size: 11px;
-        border-radius: 6px;
-        z-index: 2147483647;
-        pointer-events: none;
-        opacity: 0.6
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+        min-width: 100%;
     }
 
-    /* RESPONSIVIDADE */
-    @media (max-width:992px) {
-        .profile-wrapper {
-            grid-template-columns: 260px 1fr
-        }
-
-        .pepe {
-            width: 200px;
-            height: 200px
-        }
-
-        .menu-icon {
-            display: block
-        }
+    .action-buttons {
+        flex-direction: column;
     }
 
-    @media (max-width:841px) {
-        header.container {
-            padding-right: 36%
-        }
+    .info-group {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+    }
+}
 
-        main {
-            margin-top: 96px
-        }
-
-        .profile-wrapper {
-            grid-template-columns: 1fr;
-            gap: 12px
-        }
-
-        .titu {
-            text-align: center;
-            margin-top: 6px
-        }
-
-        .pepe {
-            width: 180px;
-            height: 180px;
-            margin: 6px auto
-        }
-
-        .service1 {
-            order: 99;
-            width: 94%;
-            margin: 10px auto
-        }
-
-        .buttons-row {
-            justify-content: center
-        }
-
-        .bobo1,
-        .bobo2 {
-            min-width: 80%;
-            max-width: 560px
-        }
+/* ===== ANIMAÇÕES EXTRAS ===== */
+@media (prefers-reduced-motion: no-preference) {
+    .profile-card, .profile-details {
+        transition: box-shadow 0.3s ease;
     }
 
-    @media (max-width:556px) {
-        .pepe {
-            width: 140px;
-            height: 140px
-        }
-
-        .name,
-        .email,
-        .Num {
-            text-align: center
-        }
-
-        .bobo1,
-        .bobo2 {
-            width: 94%
-        }
-
-        .service1 {
-            padding: 14px;
-            border-radius: 18px
-        }
+    .profile-card:hover, .profile-details:hover {
+        box-shadow: 0 16px 50px rgba(255, 189, 89, 0.15);
     }
-
-    @media (max-width:405px) {
-        .pepe {
-            width: 120px;
-            height: 120px
-        }
-
-        .titu {
-            font-size: 1.1rem
-        }
-
-        .bobo1,
-        .bobo2 {
-            font-size: .95rem;
-            padding: 10px;
-            border-radius: 22px
-        }
-    }
-
-    /* evitar overflow horizontal */
-    body,
-    header,
-    main,
-    nav {
-        overflow-x: hidden
-    }
+}

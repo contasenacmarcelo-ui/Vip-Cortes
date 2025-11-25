@@ -16,8 +16,14 @@ app.use(express.urlencoded({ extended: true }));
 
 const _dirname = path.resolve();
 
-// Servir arquivos estáticos diretamente da raiz do projeto
-app.use(express.static(_dirname));
+// Servir corretamente os arquivos estáticos da pasta "publico"
+app.use(express.static(path.join(_dirname, 'index')));
+
+// Página inicial
+app.get('/', (req, res) => {
+  res.sendFile(path.join(_dirname, 'publico', 'index.html'));
+});
+
 
 // Rota amigável: /Pagina -> serve Pagina.html (ignora rotas que comecem com /api)
 app.get('/:page', async (req, res, next) => {
@@ -41,9 +47,10 @@ const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
 try {
   await sequelize.authenticate();
-  await sequelize.sync();
+  // sincroniza modelos com o banco (aplica alterações necessárias nas tabelas existentes)
+  await sequelize.sync({ alter: true });
   db = sequelize;
-  console.log('Conectado ao banco via Sequelize!');
+  console.log('Conectado ao banco via Sequelize! (sync alter aplicado)');
 } catch (err) {
   console.error('Erro ao conectar via Sequelize:', err.message);
   console.log('Usando fallback para armazenamento local (JSON).');
