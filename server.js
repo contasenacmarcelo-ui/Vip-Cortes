@@ -41,9 +41,10 @@ const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
 try {
   await sequelize.authenticate();
-  await sequelize.sync();
+  // sincroniza modelos com o banco (aplica alterações necessárias nas tabelas existentes)
+  await sequelize.sync({ alter: true });
   db = sequelize;
-  console.log('Conectado ao banco via Sequelize!');
+  console.log('Conectado ao banco via Sequelize! (sync alter aplicado)');
 } catch (err) {
   console.error('Erro ao conectar via Sequelize:', err.message);
   console.log('Usando fallback para armazenamento local (JSON).');
