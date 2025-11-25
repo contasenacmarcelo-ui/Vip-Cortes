@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vip cortes</title>
-    <link rel="stylesheet"      href="conta.css">
+    <link rel="stylesheet" href="conta.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap"
@@ -56,17 +56,50 @@
 
                 <div class="caixa-vinte">
 
-                    <button type="submit"      class=" botao5">Enviar e Entrar</button>
+                    <button type="submit" class=" botao5">Enviar e Entrar</button>
 
                 </div>
             </form>
 
         </div>
+    <script>
+        const formulario = document.getElementById('formulario');
 
-        <script>
-            </script>
-            
+        formulario.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('Nome').value.trim();
+            const telefone = document.getElementById('Telefone').value.trim();
+            const nascimento = document.getElementById('Data').value.trim();
+            const senha = document.getElementById('Senha').value;
+
+            if (!nome || !telefone || !nascimento || !senha) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/usuarios/criar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, telefone, nascimento, senha })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    sessionStorage.setItem('usuarioId', data.usuarioId);
+                    sessionStorage.setItem('usuarioNome', data.usuarioNome || nome);
+                    sessionStorage.setItem('usuarioTelefone', telefone);
+                    sessionStorage.setItem('autenticado', 'true');
+                    window.location.href = './perfil.html';
+                } else {
+                    alert('Erro ao criar conta: ' + (data.error || 'Erro desconhecido'));
+                }
+            } catch (err) {
+                console.error('Erro ao conectar ao servidor:', err);
+                alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+            }
+        });
+    </script>
 </body>
 
 </html>
-

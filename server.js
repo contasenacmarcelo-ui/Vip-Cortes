@@ -5,29 +5,25 @@ import path from 'path';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
-import path from 'path';
 
 const app = express();
 const PORT = 10000;
 
 // ----------- Middleware -----------
 app.use(cors());
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-
-app.use(express.json());
 
 const _dirname = path.resolve();
 
-app.use(express.static(path.join(_dirname, "HTML")));
+app.use(express.static(_dirname));
 
 // ----------- Conexão MySQL -----------
 let db;
 const DATA_DIR = path.resolve('.', 'data');
 const REVIEWS_FILE = path.join(DATA_DIR, 'reviews.json');
 const AGENDAMENTOS_FILE = path.join(DATA_DIR, 'agendamentos.json');
+const USUARIOS_FILE = path.join(DATA_DIR, 'usuarios.json');
 
 try {
   db = await mysql.createConnection({
@@ -54,6 +50,11 @@ try {
     } catch {
       await fs.writeFile(AGENDAMENTOS_FILE, '[]', 'utf8');
     }
+    try {
+      await fs.access(USUARIOS_FILE);
+    } catch {
+      await fs.writeFile(USUARIOS_FILE, '[]', 'utf8');
+    }
     console.log('Arquivo de dados local preparado em', REVIEWS_FILE);
   } catch (err2) {
     console.error('Erro ao preparar armazenamento local:', err2.message);
@@ -66,15 +67,16 @@ if (db) {
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  phone VARCHAR(20)
+  phone VARCHAR(20),
+  nascimento VARCHAR(30),
+  password VARCHAR(255) NOT NULL
 );
 `);
 
   await db.execute(`
 CREATE TABLE IF NOT EXISTS agendamentos (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT,
   name VARCHAR(100) NOT NULL,
   age INT,
   phone VARCHAR(20),
@@ -123,52 +125,95 @@ CREATE TABLE IF NOT EXISTS fidelidades (
 
 
 // ----------- Rotas API -----------
-
-// Signup
-app.post('/api/signup', async (req, res) => {
+// Criar usuário (endpoint usado por criandoconta.html)
+app.post('/api/usuarios/criar', async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
-    const hash = await bcrypt.hash(password, 10);
-    const [result] = await db.execute(
-      'INSERT INTO usuarios (name,email,password,phone) VALUES (?,?,?,?)',
-      [name, email, hash, phone]
-    );
-    res.json({ message: 'Usuário criado com sucesso!', userId: result.insertId });
+    const { nome, telefone, nascimento, senha } = req.body;
+    if (!nome || !telefone || !nascimento || !senha) return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    const hash = await bcrypt.hash(senha, 10);
+    if (db) {
+      const [result] = await db.execute('INSERT INTO usuarios (name, phone, nascimento, password) VALUES (?, ?, ?, ?)', [nome, telefone, nascimento, hash]);
+      return res.json({ message: 'Usuário criado com sucesso!', usuarioId: result.insertId, usuarioNome: nome });
+    }
+    // Fallback para arquivo JSON
+    const fileContent = await fs.readFile(USUARIOS_FILE, 'utf8');
+    const arr = JSON.parse(fileContent || '[]');
+    const maxId = arr.reduce((m, a) => (a.id && a.id > m ? a.id : m), 0);
+    const newItem = {
+      id: maxId + 1,
+      nome,
+      telefone,
+      nascimento,
+      senha: hash,
+      created_at: new Date().toISOString()
+    };
+    arr.push(newItem);
+    await fs.writeFile(USUARIOS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+    return res.json({ message: 'Usuário criado (armazenamento local)', usuarioId: newItem.id, usuarioNome: nome });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: 'Erro ao criar usuário. Email pode já estar cadastrado.' });
+    console.error('Erro ao criar usuário:', err);
+    res.status(500).json({ error: 'Erro ao criar usuário' });
   }
 });
 
-
-
-// Login
-app.post('/api/login', async (req, res) => {
+// Obter dados do usuário por id (usado por perfil.html)
+app.get('/api/usuarios/:id', async (req, res) => {
   try {
-    const { email, senha } = req.body;
-    const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
-    if (!rows.length) return res.status(404).json({ error: 'Usuário não encontrado' });
-
-    const user = rows[0];
-    const match = await bcrypt.compare(senha, user.password);
-    if (!match) return res.status(401).json({ error: 'Senha incorreta' });
-
-    res.json({ message: 'Login realizado com sucesso', userId: user.id });
+    const { id } = req.params;
+    if (db) {
+      const [rows] = await db.execute('SELECT id, name, phone, nascimento FROM usuarios WHERE id = ?', [id]);
+      if (!rows.length) return res.status(404).json({ error: 'Usuário não encontrado' });
+      const u = rows[0];
+      return res.json({ usuario: { id: u.id, nome: u.name, telefone: u.phone, nascimento: u.nascimento } });
+    }
+    // Fallback JSON
+    const fileContent = await fs.readFile(USUARIOS_FILE, 'utf8');
+    const arr = JSON.parse(fileContent || '[]');
+    const u = arr.find(a => String(a.id) === String(id));
+    if (!u) return res.status(404).json({ error: 'Usuário não encontrado' });
+    return res.json({ usuario: { id: u.id, nome: u.nome, telefone: u.telefone, nascimento: u.nascimento } });
   } catch (err) {
-    console.error(err);
+    console.error('Erro ao obter usuário:', err);
+    res.status(500).json({ error: 'Erro ao obter dados do usuário' });
+  }
+});
+
+// Login por nome (endpoint usado por cartaofidelidade.html)
+app.post('/api/usuarios/login', async (req, res) => {
+  try {
+    const { nome, senha } = req.body;
+    if (!nome || !senha) return res.status(400).json({ error: 'Nome e senha são obrigatórios' });
+    if (db) {
+      const [rows] = await db.execute('SELECT id, name, phone, password FROM usuarios WHERE name = ?', [nome]);
+      if (!rows.length) return res.status(404).json({ error: 'Usuário não encontrado' });
+      const user = rows[0];
+      const match = await bcrypt.compare(senha, user.password);
+      if (!match) return res.status(401).json({ error: 'Senha incorreta' });
+      return res.json({ usuario: { id: user.id, nome: user.name, telefone: user.phone } });
+    }
+    // Fallback JSON
+    const fileContent = await fs.readFile(USUARIOS_FILE, 'utf8');
+    const arr = JSON.parse(fileContent || '[]');
+    const user = arr.find(a => a.nome === nome);
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    const match = await bcrypt.compare(senha, user.senha || user.password || '');
+    if (!match) return res.status(401).json({ error: 'Senha incorreta' });
+    return res.json({ usuario: { id: user.id, nome: user.nome, telefone: user.telefone } });
+  } catch (err) {
+    console.error('Erro no login:', err);
     res.status(500).json({ error: 'Erro no login' });
   }
 });
 
-// Criar agendamento (sem usuário vinculado)
+// Criar agendamento (vinculado a usuário se fornecido usuario_id)
 app.post('/api/agendamentos', async (req, res) => {
   try {
-    const { name, age, phone, service, date, time, observacoes } = req.body;
+    const { name, age, phone, service, date, time, observacoes, usuario_id } = req.body;
     if (db) {
       await db.execute(
-        `INSERT INTO agendamentos (name, age, phone, service, data_agendamento, hora, observacoes)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, age, phone, service, date, time, observacoes || null]
+        `INSERT INTO agendamentos (usuario_id, name, age, phone, service, data_agendamento, hora, observacoes)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [usuario_id || null, name, age, phone, service, date, time, observacoes || null]
       );
       res.json({ message: 'Agendamento criado com sucesso' });
     } else {
@@ -178,6 +223,7 @@ app.post('/api/agendamentos', async (req, res) => {
       const maxId = arr.reduce((m, a) => (a.id && a.id > m ? a.id : m), 0);
       const newItem = {
         id: maxId + 1,
+        usuario_id: usuario_id || null,
         name,
         age: age || null,
         phone: phone || '',
@@ -196,15 +242,26 @@ app.post('/api/agendamentos', async (req, res) => {
   }
 });
 
-// Listar agendamentos
+// Listar agendamentos (todos ou de um usuário específico)
 app.get('/api/agendamentos', async (req, res) => {
   try {
+    const { usuario_id } = req.query;
     if (db) {
-      const [rows] = await db.execute('SELECT * FROM agendamentos ORDER BY data_agendamento, hora');
+      let query = 'SELECT * FROM agendamentos';
+      let params = [];
+      if (usuario_id) {
+        query += ' WHERE usuario_id = ?';
+        params.push(usuario_id);
+      }
+      query += ' ORDER BY data_agendamento, hora';
+      const [rows] = await db.execute(query, params);
       res.json({ appointments: rows });
     } else {
       const content = await fs.readFile(AGENDAMENTOS_FILE, 'utf8');
-      const rows = JSON.parse(content || '[]');
+      let rows = JSON.parse(content || '[]');
+      if (usuario_id) {
+        rows = rows.filter(a => String(a.usuario_id) === String(usuario_id));
+      }
       // ordenar por data_agendamento e hora
       rows.sort((a, b) => {
         const da = a.data_agendamento ? new Date(a.data_agendamento) : new Date(0);

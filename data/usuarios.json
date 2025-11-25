@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nome": "jrtfgjzghmfhm",
+    "telefone": ".jk.jk.jk.",
+    "nascimento": "uoouhig",
+    "senha": "$2a$10$0aYsnoaUTHdswdTfo7Vl4uIMCraCunmNFiYZ32vKby1bWB98p8QK6",
+    "created_at": "2025-11-25T03:04:21.666Z"
+  },
+  {
+    "id": 2,
+    "nome": "marco tulio",
+    "telefone": "34 996780055",
+    "nascimento": "14/06/2010",
+    "senha": "$2a$10$.BOAqxXFAizTLFH5T0Q4F.A99rmoGpzlGcWUrH5x/efHlXL9WcQp2",
+    "created_at": "2025-11-25T03:09:21.821Z"
+  },
+  {
+    "id": 3,
+    "nome": "marco tulio",
+    "telefone": "34 996780055",
+    "nascimento": "14/06/2010",
+    "senha": "$2a$10$rVyZ.HvPy7ITFEv0863UH.WWHTIaoBqjOUwE6.9yHNul9ZLygQaPq",
+    "created_at": "2025-11-25T15:14:23.390Z"
+  }
+]

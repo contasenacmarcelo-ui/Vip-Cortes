@@ -43,12 +43,12 @@
   <main>
     <img src="./assets/tela 1.png" alt="tela" class="tela">
     <div class="caixa-ten">
-      <input type="text" placeholder="Nome:" class="botao">
-      <input type="text" placeholder="Senha:" class="botao2">
+      <input type="text" id="loginNome" placeholder="Nome:" class="botao" autocomplete="off">
+      <input type="password" id="loginSenha" placeholder="Senha:" class="botao2" autocomplete="off">
     </div>
     <div class="caixa-eleven">
-      <a href="indexpontos.html"><button class="botao3">Entrar Agora</button></a>
-      <a href="#"><button class="botao4">Cancelar Cartão</button></a>
+      <button class="botao3" id="btnEntrar">Entrar Agora</button>
+      <button class="botao4" id="btnCancelar">Cancelar Cartão</button>
     </div>
     <div class="caixa-aviso">
       <span>Caso não Possua um login, pressione O BOTÃO “CADASTRAR-SE” PARA USUFRUIR DE DESCONTOS E BÔNUS INCRÍVEIS POR APENAS CORTAR O CABELO REGULARMENTE! </span>
@@ -60,9 +60,42 @@
   </main>
 
   <script>
+    async function autenticarUsuario(nome, senha) {
+      try {
+        const response = await fetch('/api/usuarios/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, senha })
+        });
+        const data = await response.json();
+        if (response.ok && data.usuario) {
+          sessionStorage.setItem('usuarioId', data.usuario.id);
+          sessionStorage.setItem('usuarioNome', data.usuario.nome);
+          sessionStorage.setItem('usuarioTelefone', data.usuario.telefone || '');
+          sessionStorage.setItem('autenticado', 'true');
+          alert('Login realizado com sucesso!');
+          window.location.href = './perfil.html';
+          return;
+        }
+        alert('Erro no login: ' + (data.error || 'Credenciais incorretas'));
+      } catch (err) {
+        console.error('Erro ao conectar ao servidor:', err);
+        alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+      }
+    }
 
-    </script>
-    
+    document.getElementById('btnEntrar').addEventListener('click', () => {
+      const nome = document.getElementById('loginNome').value.trim();
+      const senha = document.getElementById('loginSenha').value.trim();
+      if (!nome || !senha) { alert('Preencha nome e senha'); return; }
+      autenticarUsuario(nome, senha);
+    });
+
+    document.getElementById('loginSenha').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnEntrar').click();
+    });
+  </script>
+
 </body>
 
 </html>
