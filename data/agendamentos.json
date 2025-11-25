@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "marco tulio",
+    "age": 18,
+    "phone": "34 996780055",
+    "service": "corte-cabelo",
+    "data_agendamento": "2025-11-26",
+    "hora": "11:11",
+    "observacoes": null
+  }
+]

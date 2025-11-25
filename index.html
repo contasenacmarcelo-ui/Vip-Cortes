@@ -19,8 +19,7 @@ git remote set-url origin https://github.com/contasenacmarcelo-ui/Vip-Cortes.git
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 </head>
 <body class="bodyhome">
-    <header class="container">
-        <button class="menu-icon" aria-label="Abrir menu"><img src="./assets/menu (sidebar).png" alt=""></button>
+    < class="container"
         <section class="container_left">
             <img src="./assets/Vip cortes logo.png" alt="Logo Vip Cortes" class="logo">
             <a href="index.html" class="item"><b>Home</b></a>
@@ -32,7 +31,41 @@ git remote set-url origin https://github.com/contasenacmarcelo-ui/Vip-Cortes.git
         <a href="cartaofidelidade.html" class="entrar"><b>Entrar</b></a>
         <a href="criandoconta.html" class="entrar2"><b>Cadastre-se</b></a>
         </section>
-    </header>
+        <button id="btnHamb" class="menu-icon" aria-label="Abrir menu">
+          <img src="./assets/menu (sidebar).png" alt="">
+        </button>
+            </header>
+      
+            
+        
+            
+        
+        <!-- Backdrop (para fechar ao clicar fora) -->
+        <div id="backdrop" class="backdrop-menu"></div>
+        
+        <!-- Menu Lateral -->
+        <aside id="sideMenu" class="side-menu">
+        
+          <div class="top-menu-row">
+              <h3>Menu</h3>
+              <button class="close-x" id="btnClose">×</button>
+          </div>
+        
+          <nav class="menu-items">
+              <a href="index.html">Home</a>
+              <a href="AGENDAR.html">Agendar</a>
+              <a href="Avaliações.html">Avaliar</a>
+              <a href=""></a>
+          </nav>
+        
+          <div class="profile-box">
+              <a href="cartaofidelidade.html" class="perfil"><img src="./assets/perfil.png" alt="Foto de perfil"></a>
+          </div>
+        
+        </aside>
+      
+      
+      
     <main>
         <div class="fundo">
             <img src="./assets/barbearia.webp" alt="Barbearia" class="barber_background">
@@ -40,7 +73,7 @@ git remote set-url origin https://github.com/contasenacmarcelo-ui/Vip-Cortes.git
         </div>
         <div class="main">
             <a href="./index.html"><img src="./assets/Vip cortes logo.png" alt="" class="logo_main"></a>
-            <span class="slogan">“Tudoo o que seu cabelo precisar”</span>
+            <span class="slogan">“Tudo o que seu cabelo precisar”</span>
             <a href="AGENDAR.html"><button class="botao-principal"><b>AGENDAR</b></button></a>
         </div>
     </main>
@@ -129,6 +162,28 @@ git remote set-url origin https://github.com/contasenacmarcelo-ui/Vip-Cortes.git
                 <p class="hora2">9h às 22h</p>
             </aside>            
          </footer>
+
+         <script>
+          const btn = document.getElementById("btnHamb");
+          const side = document.getElementById("sideMenu");
+          const closeBtn = document.getElementById("btnClose");
+          const backdrop = document.getElementById("backdrop");
+        
+          function abrirMenu() {
+            side.classList.add("open");
+            backdrop.classList.add("show");
+          }
+        
+          function fecharMenu() {
+            side.classList.remove("open");
+            backdrop.classList.remove("show");
+          }
+        
+          btn.addEventListener("click", abrirMenu);
+          closeBtn.addEventListener("click", fecharMenu);
+          backdrop.addEventListener("click", fecharMenu);
+        </script>
+    
          <script src="main.js" defer></script>
 </body>
 </html>
