@@ -764,7 +764,7 @@
             carregarDadosUsuario();
             
             // Carregar agendamentos do usuário
-            const usuarioId = sessionStorage.getItem('usuarioId');
+            const agendamentos = sessionStorage.getItem('usuarioId');
             if (usuarioId) {
                 carregarAgendamentosUsuario(usuarioId);
             }
