@@ -5,7 +5,6 @@ import path from 'path';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
-import path from 'path';
 
 const app = express();
 const PORT = 10000;

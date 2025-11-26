@@ -14,26 +14,57 @@
 </head>
 
 <body>
-  <header>
-    <div class="traco1">
-      <img class="tracos" src="./assets/menu (sidebar).png" alt="3 traços">
-    </div>
-    <div class="caixa-one">
-      <img class="img-one" src="./assets/Vip cortes logo.png" alt="logo">
-      <a class="item" href="./index.html"><b>Home</b></a>
-      <a class="item" href="./Avaliações.html"><b>Avaliações</b></a>
-      <a class="item" href="./AGENDAR.html"><b>Agendar</b></a>
-
-    </div>
-
-    <div class="caixa-two">
-      <a class="item-two" href="./cartaofidelidade.html"><b>Entrar</b></a>
-      <a class="item-three" href="./criandoconta.html"><b>Cadastre-se</b></a>
-
-    </div>
-   
-  </header>
+  <header class="container">
     
+    <section class="container_left">
+      <img
+        src="./assets/Vip cortes logo.png"
+        alt="Logo Vip Cortes"
+        class="logo"
+      />
+      <a href="index.html" class="item"><b>Home</b></a>
+      <a href="AGENDAR.html" class="agendar"><b>Agendar</b></a>
+      <a href="Avaliações.html" class="item"><b>Avaliações</b></a>
+    </section>
+    <section class="container_right">
+      <a href="cartaofidelidade.html" class="entrar"><b>Entrar</b></a>
+      <a href="criandoconta.html" class="entrar2"><b>Cadastre-se</b></a>
+    </section>
+
+    <!-- Botão Hamburguer -->
+<button id="btnHamb" class="menu-icon" aria-label="Abrir menu">
+<img src="./assets/menu (sidebar).png" alt="">
+</button>
+  </header>
+
+  
+
+<!-- Backdrop (para fechar ao clicar fora) -->
+<div id="backdrop" class="backdrop-menu"></div>
+
+<!-- Menu Lateral -->
+<aside id="sideMenu" class="side-menu">
+
+<div class="top-menu-row">
+    <h3>Menu</h3>
+    <button class="close-x" id="btnClose">×</button>
+</div>
+
+<nav class="menu-items">
+    <a href="index.html">Home</a>
+    <a href="AGENDAR.html">Agendar</a>
+    <a href="Avaliações.html">Avaliar</a>
+    <a href="admin.html">Admin</a>
+</nav>
+
+<div class="profile-box">
+    <a href="cartaofidelidade.html" class="perfil"><img src="./assets/perfil.png" alt="Foto de perfil"></a>
+</div>
+
+</aside>
+    
+
+
   <div class="line"></div>
   <section>
     <span class="item-four"><b>CARTÃO</b></span>
@@ -43,25 +74,60 @@
   <main>
     <img src="./assets/tela 1.png" alt="tela" class="tela">
     <div class="caixa-ten">
-      <input type="text" placeholder="Nome:" class="botao">
-      <input type="text" placeholder="Senha:" class="botao2">
+      <input type="text" placeholder="Nome completo:" class="botao">
+      <div class="senhaolho">
+        <input type="password" id="senha" placeholder="Digite sua senha:" class="botao2" > 
+        <button class="botaoolho" onclick="mostrarSenha()">
+          <img src="assets/olho mostrar.png" class="olho" alt="Mostrar senha">
+      </button></div>
+     
     </div>
     <div class="caixa-eleven">
-      <a href="indexpontos.html"><button class="botao3">Entrar Agora</button></a>
+      <a href="pontos.html"><button class="botao3">Entrar Agora</button></a>
       <a href="#"><button class="botao4">Cancelar Cartão</button></a>
     </div>
     <div class="caixa-aviso">
-      <span>Caso não Possua um login, pressione O BOTÃO “CADASTRAR-SE” PARA USUFRUIR DE DESCONTOS E BÔNUS INCRÍVEIS POR APENAS CORTAR O CABELO REGULARMENTE! </span>
+      <span>CASO NÃO POSSUA LOGIN, PRESSIONE O BOTÃO <strong>“CADASTRAR-SE”</strong> PARA USUFRUIR DE DESCONTOS E BÔNUS INCRÍVEIS POR APENAS CORTAR O CABELO REGULARMENTE! </span>
 
     </div>
     <div class="caixa-cadastre">
-      <a class="botao5" href="criandoconta.html">CADASTRE-SE</a>
+      <a class="botao5" href="criandoconta.html"><strong>CADASTRAR-SE</strong></a>
     </div>
   </main>
 
   <script>
+    const btn = document.getElementById("btnHamb");
+    const side = document.getElementById("sideMenu");
+    const closeBtn = document.getElementById("btnClose");
+    const backdrop = document.getElementById("backdrop");
+  
+    function abrirMenu() {
+      side.classList.add("open");
+      backdrop.classList.add("show");
+    }
+  
+    function fecharMenu() {
+      side.classList.remove("open");
+      backdrop.classList.remove("show");
+    }
+  
+    btn.addEventListener("click", abrirMenu);
+    closeBtn.addEventListener("click", fecharMenu);
+    backdrop.addEventListener("click", fecharMenu);
 
-    </script>
+    ////////////////////Mostrar senha//////////////////////////////
+
+    function mostrarSenha() {
+    const campo = document.getElementById("senha");
+    if (campo.type === "password") {
+      campo.type = "text";
+    } else {
+      campo.type = "password";
+    }
+  }
+  </script>
+
+
     
 </body>
 
