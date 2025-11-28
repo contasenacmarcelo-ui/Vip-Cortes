@@ -34,6 +34,8 @@ function starSvg(filled) {
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
+    const usuarioId = sessionStorage.getItem('usuarioId');
+
     const payload = {
       name: nomeEl.value.trim(),
       age: idadeEl ? Number(idadeEl.value) : null,
@@ -41,7 +43,8 @@ function starSvg(filled) {
       service: servicosEl.value,
       date: diaEl.value,
       time: horarioEl.value,
-      observacoes: null
+      observacoes: null,
+      usuario_id: usuarioId || null
     };
 
     if (!payload.name || !payload.service || !payload.date) {
@@ -271,8 +274,12 @@ function starSvg(filled) {
       return;
     }
 
+    // Usar nome do usuário logado se disponível, senão anonimato
+    const usuarioNome = sessionStorage.getItem('usuarioNome');
+    const autenticado = sessionStorage.getItem('autenticado');
+
     const payload = {
-      author_name: 'Anônimo', // manter anonimato por padrão
+      author_name: (autenticado && usuarioNome) ? usuarioNome : 'Anônimo',
       content: content,
       rating: selectedRating || 0
     };

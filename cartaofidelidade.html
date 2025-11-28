@@ -74,18 +74,17 @@
   <main>
     <img src="./assets/tela 1.png" alt="tela" class="tela">
     <div class="caixa-ten">
-      <input type="text" placeholder="Nome completo:" class="botao">
-      <div class="senhaolho">
-        <input type="password" id="senha" placeholder="Digite sua senha:" class="botao2" > 
-        <button class="botaoolho" onclick="mostrarSenha()">
-          <img src="assets/olho mostrar.png" class="olho" alt="Mostrar senha">
-      </button></div>
-     
+
+
+        <input id="email" type="text" placeholder="Email:" class="botao">
+        <input id="senha" type="password" placeholder="Senha:" class="botao2">
+      </div>
+      <div class="caixa-eleven">
+        <button id="btnEntrar" class="botao3">Entrar Agora</button>
+        <button id="btnCancelar" class="botao4">Cancelar Cartão</button>
+
     </div>
-    <div class="caixa-eleven">
-      <a href="pontos.html"><button class="botao3">Entrar Agora</button></a>
-      <a href="#"><button class="botao4">Cancelar Cartão</button></a>
-    </div>
+    <div id="mensagem" style="margin-top:12px;color:#900;font-weight:bold"></div>
     <div class="caixa-aviso">
       <span>CASO NÃO POSSUA LOGIN, PRESSIONE O BOTÃO <strong>“CADASTRAR-SE”</strong> PARA USUFRUIR DE DESCONTOS E BÔNUS INCRÍVEIS POR APENAS CORTAR O CABELO REGULARMENTE! </span>
 
@@ -96,39 +95,50 @@
   </main>
 
   <script>
-    const btn = document.getElementById("btnHamb");
-    const side = document.getElementById("sideMenu");
-    const closeBtn = document.getElementById("btnClose");
-    const backdrop = document.getElementById("backdrop");
-  
-    function abrirMenu() {
-      side.classList.add("open");
-      backdrop.classList.add("show");
-    }
-  
-    function fecharMenu() {
-      side.classList.remove("open");
-      backdrop.classList.remove("show");
-    }
-  
-    btn.addEventListener("click", abrirMenu);
-    closeBtn.addEventListener("click", fecharMenu);
-    backdrop.addEventListener("click", fecharMenu);
 
-    ////////////////////Mostrar senha//////////////////////////////
-
-    function mostrarSenha() {
-    const campo = document.getElementById("senha");
-    if (campo.type === "password") {
-      campo.type = "text";
-    } else {
-      campo.type = "password";
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+      const msg = document.getElementById('mensagem');
+      msg.textContent = '';
+      if (!email || !senha) { msg.textContent = 'Preencha email e senha.'; return; }
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+        const j = await res.json();
+        if (!res.ok) { msg.textContent = j.error || 'Erro no login'; return; }
+        // salvar userId e redirecionar para perfil
+        localStorage.setItem('userId', j.userId);
+        window.location.href = 'perfil (2).html';
+      } catch (err) {
+        console.error(err);
+        msg.textContent = 'Erro ao conectar ao servidor.';
+      }
     }
-  }
+
+    async function cancelarCartao() {
+      const msg = document.getElementById('mensagem');
+      msg.textContent = '';
+      const userId = localStorage.getItem('userId');
+      if (!userId) { msg.textContent = 'Faça login primeiro para cancelar o cartão.'; return; }
+      try {
+        const res = await fetch(`/api/fidelities/${encodeURIComponent(userId)}/cancel`, { method: 'POST' });
+        const j = await res.json();
+        if (!res.ok) { msg.textContent = j.error || 'Erro ao cancelar'; return; }
+        msg.style.color = 'green';
+        msg.textContent = j.message || 'Cartão cancelado com sucesso';
+      } catch (err) {
+        console.error(err);
+        msg.textContent = 'Erro ao conectar ao servidor.';
+      }
+    }
+
+    document.getElementById('btnEntrar').addEventListener('click', login);
+    document.getElementById('btnCancelar').addEventListener('click', cancelarCartao);
   </script>
 
-
-    
 </body>
 
 </html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Cortes - Meu Perfil</title>    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cssperfil (1).css">
+</head>
+<body>
+    <header class="container">
+        <section class="container_main">
+            <img src="./assets/Vip cortes logo.png" alt="vip cortes logo" class="logo">
+            <a href="index.html" class="item"><b>Home</b></a>
+            <a href="AGENDAR.html" class="item"><b>Agendar</b></a>
+            <a href="Avaliações.html" class="item"><b>Avaliações</b></a>
+        </section>
+        <section class="container_login">
+            <a href="cartaofidelidade.html" class="entrar"><b>Entrar</b></a>
+            <a href="criandoconta.html" class="entrar2"><b>Cadastre-se</b></a>
+        </section>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1 id="pageTitle">Meu Perfil</h1>
+                <p>Bem-vindo à sua área pessoal VIP Cortes</p>
+            </div>
+
+            <div class="profile-content">
+                <!-- COLUNA ESQUERDA -->
+                <div class="profile-card">
+                    <img src="./assets/perfil.png" alt="Avatar do perfil" class="avatar">
+                    
+                    <div class="loyalty-badge">
+                        <span class="loyalty-label">Pontos de Fidelidade</span>
+                        <div class="loyalty-display">
+                            <div class="points-number" id="pontos">0</div>
+                            <img src="./assets/vip coin.png" alt="VIP Coin" class="coin-icon">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUNA DIREITA -->
+                <div class="profile-details">
+                    <div class="info-group">
+                        <label class="info-label">Nome Completo</label>
+                        <div class="info-value" id="nomeUsuario">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label class="info-label">Telefone</label>
+                        <div class="info-value" id="telefoneUsuario">-</div>
+                    </div>
+
+                    <div class="service-section">
+                        <label class="service-title">Próximo Agendamento</label>
+                        
+                        <div id="servicesContainer">
+                            <!-- Agendamentos serão carregados aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Função para carregar agendamentos do usuário
+        async function carregarAgendamentosUsuario(usuarioId) {
+            try {
+                const response = await fetch(`/api/agendamentos?usuario_id=${usuarioId}`);
+                if (!response.ok) {
+                    console.warn('Erro ao buscar agendamentos:', response.status);
+                    document.getElementById('servicesContainer').innerHTML = '<div class="service-empty">Nenhum agendamento encontrado</div>';
+                    return;
+                }
+                
+                const data = await response.json();
+                const appointments = data.appointments || [];
+                
+                if (!appointments.length) {
+                    document.getElementById('servicesContainer').innerHTML = '<div class="service-empty">Nenhum agendamento encontrado</div>';
+                    return;
+                }
+
+                // Renderizar o primeiro agendamento (próximo) em destaque
+                const firstAppointment = appointments[0];
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.innerHTML = `
+                    <div class="service-grid">
+                        <div class="service-item">
+                            <span class="service-item-label">Serviço</span>
+                            <span class="service-item-value">${escapeHtml(firstAppointment.service || '-')}</span>
+                        </div>
+                        <div class="service-item">
+                            <span class="service-item-label">Data</span>
+                            <span class="service-item-value">${firstAppointment.data_agendamento ? new Date(firstAppointment.data_agendamento).toLocaleDateString('pt-BR') : '-'}</span>
+                        </div>
+                        <div class="service-item">
+                            <span class="service-item-label">Horário</span>
+                            <span class="service-item-value">${firstAppointment.hora ? firstAppointment.hora.substring(0, 5) : '-'}</span>
+                        </div>
+                        <div class="service-item">
+                            <span class="service-item-label">Observações</span>
+                            <span class="service-item-value">${escapeHtml(firstAppointment.observacoes || '-')}</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-reschedule" onclick="window.location.href='./AGENDAR.html'">Remarcar</button>
+                        <button class="btn btn-cancel" onclick="alert('Cancelamento em desenvolvimento')">Cancelar</button>
+                    </div>
+                `;
+                
+                document.getElementById('servicesContainer').innerHTML = '';
+                document.getElementById('servicesContainer').appendChild(serviceCard);
+
+                // Se houver mais agendamentos, exibir lista
+                if (appointments.length > 1) {
+                    const moreDiv = document.createElement('div');
+                    moreDiv.style.marginTop = '20px';
+                    moreDiv.innerHTML = '<h3 style="color: #ffbd59; margin-bottom: 15px;">Outros agendamentos:</h3>';
+                    
+                    for (let i = 1; i < appointments.length; i++) {
+                        const ag = appointments[i];
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+                        card.style.marginBottom = '15px';
+                        card.innerHTML = `
+                            <div class="service-grid">
+                                <div class="service-item">
+                                    <span class="service-item-label">Serviço</span>
+                                    <span class="service-item-value">${escapeHtml(ag.service || '-')}</span>
+                                </div>
+                                <div class="service-item">
+                                    <span class="service-item-label">Data</span>
+                                    <span class="service-item-value">${ag.data_agendamento ? new Date(ag.data_agendamento).toLocaleDateString('pt-BR') : '-'}</span>
+                                </div>
+                                <div class="service-item">
+                                    <span class="service-item-label">Horário</span>
+                                    <span class="service-item-value">${ag.hora ? ag.hora.substring(0, 5) : '-'}</span>
+                                </div>
+                            </div>
+                        `;
+                        moreDiv.appendChild(card);
+                    }
+                    
+                    document.getElementById('servicesContainer').appendChild(moreDiv);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar agendamentos:', error);
+                document.getElementById('servicesContainer').innerHTML = '<div class="service-empty">Erro ao carregar agendamentos</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[s]);
+        }
+
+        // Função para carregar dados do usuário (apenas via servidor ou sessionStorage)
+        async function carregarDadosUsuario() {
+            const usuarioId = sessionStorage.getItem('usuarioId');
+            const usuarioNome = sessionStorage.getItem('usuarioNome');
+
+            if (!usuarioId) {
+                document.getElementById('pageTitle').textContent = 'Acesso Restrito';
+                document.getElementById('nomeUsuario').classList.add('empty');
+                document.getElementById('nomeUsuario').textContent = 'Faça login para ver seu perfil';
+                return;
+            }
+
+            // Usar dados em cache (sessionStorage) se disponíveis
+            const dadosSessao = sessionStorage.getItem('usuarioDados');
+            if (dadosSessao) {
+                try {
+                    const usuario = JSON.parse(dadosSessao);
+                    atualizarPerfil(usuario);
+                    console.log('✓ Dados carregados de sessionStorage');
+                    return;
+                } catch (e) {
+                    console.error('Erro ao parsear sessionStorage:', e);
+                }
+            }
+
+            // Tentar obter do servidor (DB)
+            try {
+                const response = await fetch(`/api/usuarios/${usuarioId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.usuario) {
+                        atualizarPerfil(data.usuario);
+                        sessionStorage.setItem('usuarioDados', JSON.stringify(data.usuario));
+                        console.log('✓ Dados carregados do servidor');
+                        return;
+                    }
+                } else {
+                    const err = await response.json().catch(()=>({}));
+                    console.warn('Resposta do servidor ao buscar usuário:', err);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados do servidor:', error);
+            }
+
+            // Se tudo falhar, usar apenas os dados básicos da sessão
+            atualizarPerfil({
+                id: usuarioId,
+                nome: usuarioNome || 'Usuário',
+                telefone: sessionStorage.getItem('usuarioTelefone') || '-'
+            });
+        }
+
+        // Função para atualizar elementos do perfil
+        function atualizarPerfil(usuario) {
+            if (usuario.nome) {
+                document.getElementById('nomeUsuario').textContent = usuario.nome;
+            }
+            if (usuario.telefone) {
+                document.getElementById('telefoneUsuario').textContent = usuario.telefone;
+            }
+
+            // Atualizar pontos de fidelidade (padrão: 0)
+            const pontos = usuario.pontos || 0;
+            document.getElementById('pontos').textContent = pontos;
+        }
+
+        // Verificar autenticação ao carregar a página
+        window.addEventListener('load', () => {
+            const autenticado = sessionStorage.getItem('autenticado');
+            const usuarioId = sessionStorage.getItem('usuarioId');
+            
+            if (!autenticado || !usuarioId) {
+                // Usuário não autenticado - redirecionar para login
+                alert('Você precisa fazer login para acessar o perfil!');
+                window.location.href = './cartaofidelidade.html';
+                return;
+            }
+            
+            // Usuário autenticado - carregar dados
+            carregarDadosUsuario();
+            
+            // Carregar agendamentos do usuário
+            const agendamentos = sessionStorage.getItem('usuarioId');
+            if (usuarioId) {
+                carregarAgendamentosUsuario(usuarioId);
+            }
+        });
+
+        // Event listeners dos botões
+        document.getElementById('btnReschedule').addEventListener('click', () => {
+            window.location.href = './AGENDAR.html';
+        });
+
+        document.getElementById('btnCancel').addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja cancelar o serviço?')) {
+                alert('Serviço cancelado com sucesso!');
+                document.getElementById('serviceCard').innerHTML = '<div class="service-empty">Nenhum serviço agendado</div>';
+            }
+        });
+
+        // Debug: Mostrar dados no console
+        console.log('=== VIP CORTES - PERFIL ===');
+        console.log('sessionStorage:', {
+            usuarioId: sessionStorage.getItem('usuarioId'),
+            usuarioNome: sessionStorage.getItem('usuarioNome'),
+            usuarioDados: sessionStorage.getItem('usuarioDados')
+        });
+    </script>
+</body>
+</html>

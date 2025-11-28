@@ -63,6 +63,8 @@ header {
     display: flex;
     gap: 1.5em;
     justify-content: flex-end;
+    align-items: center;
+
 }
 
 .item, .item22 {
@@ -77,7 +79,9 @@ header {
     /* SOLICITADO: REMOVER o quadrado/borda do "Cadastre-se" */
     border: none; 
     padding: 0;
-    font-size: 24px;
+    font-size: 34px;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ===== DIVISORES E TÍTULO (ADMINISTRAÇÃO) ===== */

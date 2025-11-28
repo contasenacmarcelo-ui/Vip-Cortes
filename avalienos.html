@@ -59,6 +59,16 @@
         </div>
 
     </main>
+    <script>
+        // Auto-preencher nome do usuário logado
+        window.addEventListener('load', () => {
+            const usuarioNome = sessionStorage.getItem('usuarioNome');
+            if (usuarioNome && sessionStorage.getItem('autenticado')) {
+                // Usuário logado - auto-preencher será feito via main.js
+                console.log('Usuário autenticado:', usuarioNome);
+            }
+        });
+    </script>
     <script src="main.js" defer></script>
 </body>
 </html>
