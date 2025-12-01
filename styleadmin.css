@@ -106,7 +106,7 @@
 
     /* ===== FRASES ===== */
     .frases {
-        display: flex;
+         display: flex;
         position: relative;
         top: 8vh;
         justify-content: center;
