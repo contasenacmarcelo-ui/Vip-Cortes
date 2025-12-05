@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>- Vip Cortes -</title>
+    <link rel="stylesheet" href="styleAvaliacao.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body class="body-ava2">
+    <header class="container">
+        <button class="menu-icon" aria-label="Abrir menu"><img src="./assets/menu (sidebar).png" alt=""></button>
+        <section class="container_left">
+            <img src="./assets/Vip cortes logo.png" alt="Logo Vip Cortes" class="logo">
+            <a href="index.html" class="item"><b>Home</b></a>
+            <a href="AGENDAR.html" class="item"><b>Schedule</b></a>
+            <a href="Avaliações.html" class="item"><b>Review</b></a>
+        </section>
+        <section class="container_right">
+        <a href="cartaofidelidade.html" class="entrar"><b>Login</b></a>
+        <a href="criandoconta.html" class="entrar2"><b>Sing-up</b></a>
+        </section>
+    </header>
+    <main>
+        <div class="title"><h2>Review</h2></div>
+        <div><span class="textavaliar">Would you like to&nbsp;<span class="avaliartext"> rate&nbsp;</span> us?</span></div>
+        <div class="stars">
+            <span class="star" data-index="1">⭐</span>
+            <span class="star" data-index="2">⭐</span>
+            <span class="star" data-index="3">⭐</span>
+            <span class="star" data-index="4">⭐</span>
+            <span class="star" data-index="5">⭐</span>
+        </div>
+        <!-- tabela visual de estrelas e contador -->
+        <div class="star-info" style="text-align:center; margin-top:10px;">
+            <div id="selected-rating" aria-live="polite" style="color:#f0b65f; font-size:20px;">0 de 5</div>
+            <div class="star-table" aria-hidden="true" style="margin-top:8px;">
+                <span class="star-cell" data-value="1">1</span>
+                <span class="star-cell" data-value="2">2</span>
+                <span class="star-cell" data-value="3">3</span>
+                <span class="star-cell" data-value="4">4</span>
+                <span class="star-cell" data-value="5">5</span>
+            </div>
+        </div>
+        <div class="clay">
+            <!-- Imagem removida pois não existe nos assets -->
+        </div>
+        <textarea name="" id="" maxlength="170" placeholder="Type here..." class="digiteaqui"></textarea>
+        <div class="button">
+            <a href="Avaliações.html" class="enviar">Submit</a><a href="Avaliações.html" class="cancelar">cancel</a>
+        </div>
+
+    </main>
+    <script>
+        // Auto-preencher nome do usuário logado
+        window.addEventListener('load', () => {
+            const usuarioNome = sessionStorage.getItem('usuarioNome');
+            if (usuarioNome && sessionStorage.getItem('autenticado')) {
+                // Usuário logado - auto-preencher será feito via main.js
+                console.log('Usuário autenticado:', usuarioNome);
+            }
+        });
+    </script>
+    <script src="main.js" defer></script>
+</body>
+</html>
