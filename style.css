@@ -650,7 +650,7 @@ main {
     color: black;
     font-family: "Open Sans", sans-serif;
     position: absolute;
-    width: 310px;
+    width: 350px;
     top: 226%;
     left: 41%;
     z-index: 1;
@@ -663,6 +663,17 @@ main {
     position: absolute;
     width: 340px;
     top: 226%;
+    left: 67.5%;
+    z-index: 1;
+}
+
+.av3english {
+    font-size: 22px;
+    color: black;
+    font-family: "Open Sans", sans-serif;
+    position: absolute;
+    width: 373px;
+    top: 225%;
     left: 67.5%;
     z-index: 1;
 }
@@ -729,6 +740,18 @@ main {
     position: absolute;
     top: 279%;
     left: 17%;
+    color: white;
+    font-size: 45px;
+    width: 300px;
+    font-weight: lighter;
+    z-index: 99;
+}
+
+.visualenglish{
+    font-family: "Big Shoulders", sans-serif;
+    position: absolute;
+    top: 279%;
+    left: 20%;
     color: white;
     font-size: 45px;
     width: 300px;
